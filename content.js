@@ -683,11 +683,12 @@
   }
 
   class FormBridge {
-    constructor(toast, logger, store, activationService) {
+    constructor(toast, logger, store, activationService, overlayRoot = null) {
       this.toast = toast;
       this.logger = logger;
       this.store = store;
       this.activationService = activationService;
+      this.overlayRoot = overlayRoot;
     }
 
     get form() {
@@ -708,6 +709,18 @@
 
     get submitButton() {
       return document.querySelector(SELECTORS.submitButton);
+    }
+
+    get overlaySellerField() {
+      return this.overlayRoot?.querySelector("#ext-seller-name") ?? null;
+    }
+
+    get overlayBuyerField() {
+      return this.overlayRoot?.querySelector("#ext-buyer-name") ?? null;
+    }
+
+    get overlayPlateField() {
+      return this.overlayRoot?.querySelector("#ext-plate-number") ?? null;
     }
 
     enableFields() {
@@ -744,10 +757,13 @@
     }
 
     readFormDataFromInputs() {
+      const sellerName = this.overlaySellerField?.value?.trim() || this.sellerField?.value?.trim() || "";
+      const buyerName = this.overlayBuyerField?.value?.trim() || this.buyerField?.value?.trim() || "";
+      const plateNumber = this.overlayPlateField?.value?.trim() || this.plateField?.value?.trim() || "";
       return {
-        sellerName: this.sellerField?.value.trim() ?? "",
-        buyerName: this.buyerField?.value.trim() ?? "",
-        plateNumber: this.plateField?.value.trim() ?? ""
+        sellerName,
+        buyerName,
+        plateNumber
       };
     }
 
@@ -766,6 +782,9 @@
       if (this.sellerField) this.sellerField.value = "";
       if (this.buyerField) this.buyerField.value = "";
       if (this.plateField) this.plateField.value = "";
+      if (this.overlaySellerField) this.overlaySellerField.value = "";
+      if (this.overlayBuyerField) this.overlayBuyerField.value = "";
+      if (this.overlayPlateField) this.overlayPlateField.value = "";
       this.toast.show("تم مسح البيانات", "success");
     }
 
@@ -1091,7 +1110,7 @@
 
     const logRoot = overlay.querySelector("#ext-response-log");
     const logger = new Logger(logRoot);
-    const formBridge = new FormBridge(toast, logger, store, activationService);
+    const formBridge = new FormBridge(toast, logger, store, activationService, overlay);
     formBridge.enableFields();
 
     const availabilityDot = overlay.querySelector("#availability-dot");
