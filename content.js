@@ -18,6 +18,7 @@
     overlayState: "importDepExtensionState",
     overlayPosition: "importDepExtensionPosition",
     savedFormData: "importDepSavedData",
+    savedRequestQueue: "importDepSavedRequestQueue",
     buttonStates: "importDepButtonStates",
     redirect: "importDepExtensionRedirectEnabled",
     monitoring: "importDepExtensionMonitoringEnabled",
@@ -101,6 +102,7 @@
             <h4>📝 تفاصيل الطلب</h4>
             <div class="header-buttons">
               <button id="ext-save-data" class="btn-small btn-success" title="حفظ البيانات">💾</button>
+              <button id="ext-add-to-queue" type="button" class="btn-small btn-primary" title="إضافة الطلب إلى الدفعة">➕</button>
               <button id="ext-clear-data" class="btn-small btn-secondary" title="مسح البيانات">🗑️</button>
             </div>
           </div>
@@ -116,6 +118,17 @@
             <input type="text" id="ext-plate-number" maxlength="20" placeholder="أدخل رقم اللوحة">
             <label for="ext-plate-number">رقم اللوحة</label>
           </div>
+        </div>
+        <div class="queue-panel hidden-when-minimized">
+          <div class="queue-header">
+            <h4>📦 الدفعات المحفوظة</h4>
+            <div class="queue-header-buttons">
+              <span id="ext-queue-count" class="queue-count">عدد الطلبات: 0</span>
+              <button id="ext-send-queue" type="button" class="btn-small btn-primary" title="إرسال جميع الطلبات المحفوظة">📨 إرسال الدفعة</button>
+              <button id="ext-clear-queue" type="button" class="btn-small btn-secondary" title="مسح الدفعة">🧹</button>
+            </div>
+          </div>
+          <div id="ext-queue-list" class="queue-list"></div>
         </div>
         <div class="control-panel">
           <div class="panel-header">
@@ -895,6 +908,158 @@
     }
   }
 
+  class BatchRequestManager {
+    constructor(store, toast, formBridge, logger) {
+      this.store = store;
+      this.toast = toast;
+      this.formBridge = formBridge;
+      this.logger = logger;
+      this.isSubmitting = false;
+    }
+
+    getQueue() {
+      const queue = this.store.get(STORAGE_KEYS.savedRequestQueue, []);
+      if (!Array.isArray(queue)) {
+        return [];
+      }
+      return queue
+        .map((item) => ({
+          sellerName: item?.sellerName?.trim() || "",
+          buyerName: item?.buyerName?.trim() || "",
+          plateNumber: item?.plateNumber?.trim() || ""
+        }))
+        .filter((item) => item.sellerName && item.buyerName && item.plateNumber);
+    }
+
+    #sanitizeData(data) {
+      if (!data) {
+        return null;
+      }
+      const sellerName = data.sellerName?.trim() || "";
+      const buyerName = data.buyerName?.trim() || "";
+      const plateNumber = data.plateNumber?.trim() || "";
+      if (!sellerName || !buyerName || !plateNumber) {
+        return null;
+      }
+      return { sellerName, buyerName, plateNumber };
+    }
+
+    #saveQueue(queue) {
+      if (!queue.length) {
+        this.store.remove(STORAGE_KEYS.savedRequestQueue);
+        return;
+      }
+      this.store.set(STORAGE_KEYS.savedRequestQueue, queue);
+    }
+
+    add(data) {
+      if (this.isSubmitting) {
+        this.toast.show("لا يمكن إضافة طلب أثناء إرسال الدفعة", "warning");
+        return false;
+      }
+      const sanitized = this.#sanitizeData(data);
+      if (!sanitized) {
+        this.toast.show("جميع الحقول مطلوبة للإضافة", "error");
+        return false;
+      }
+      const queue = this.getQueue();
+      queue.push(sanitized);
+      this.#saveQueue(queue);
+      this.toast.show(`تمت إضافة الطلب إلى الدفعة (الإجمالي: ${queue.length})`, "success");
+      if (queue.length === 10) {
+        this.toast.show("أضفت 10 طلبات - يمكنك الآن إرسال الدفعة كاملة", "info");
+      }
+      return true;
+    }
+
+    remove(index) {
+      if (this.isSubmitting) {
+        this.toast.show("لا يمكن تعديل الدفعة أثناء الإرسال", "warning");
+        return false;
+      }
+      const queue = this.getQueue();
+      if (index < 0 || index >= queue.length) {
+        return false;
+      }
+      queue.splice(index, 1);
+      if (queue.length === 0) {
+        this.clear(true);
+      } else {
+        this.#saveQueue(queue);
+      }
+      this.toast.show("تم حذف الطلب من الدفعة", "success");
+      return true;
+    }
+
+    clear(silent = false) {
+      if (this.isSubmitting) {
+        this.toast.show("لا يمكن مسح الدفعة أثناء الإرسال", "warning");
+        return;
+      }
+      this.store.remove(STORAGE_KEYS.savedRequestQueue);
+      if (!silent) {
+        this.toast.show("تم مسح جميع الطلبات المحفوظة", "success");
+      }
+    }
+
+    async submitAll(progressCallback) {
+      if (this.isSubmitting) {
+        this.toast.show("جاري إرسال دفعة حالية، يرجى الانتظار", "warning");
+        const length = this.getQueue().length;
+        return { sent: 0, total: length, remaining: length };
+      }
+      const queue = this.getQueue();
+      if (queue.length === 0) {
+        this.toast.show("لا يوجد طلبات محفوظة للإرسال", "error");
+        return { sent: 0, total: 0, remaining: 0 };
+      }
+
+      this.isSubmitting = true;
+      let sentCount = 0;
+      let remaining = [];
+      try {
+        for (let index = 0; index < queue.length; index += 1) {
+          const item = queue[index];
+          this.logger?.log(`إرسال الطلب ${index + 1} من ${queue.length}: ${item.sellerName} → ${item.buyerName} (${item.plateNumber})`, "info");
+          progressCallback?.(index, queue.length, item);
+          this.formBridge.fillWebsiteFields(item);
+          const result = await this.formBridge.submitOrder(item);
+          if (!result) {
+            remaining = queue.slice(index);
+            this.logger?.log("تم إيقاف إرسال الدفعة بسبب فشل الطلب", "warning");
+            this.toast.show(`توقف الإرسال عند الطلب رقم ${index + 1}`, "warning");
+            break;
+          }
+          sentCount += 1;
+        }
+      } catch (error) {
+        remaining = queue.slice(sentCount);
+        this.logger?.log(`فشل إرسال الدفعة: ${error.message}`, "error");
+        this.toast.show("حدث خطأ أثناء إرسال الدفعة", "error");
+      } finally {
+        if (sentCount === queue.length && remaining.length === 0) {
+          this.clear(true);
+          this.logger?.log("تم إرسال جميع الطلبات في الدفعة", "success");
+          this.toast.show(`تم إرسال جميع الطلبات (${sentCount}) بنجاح`, "success");
+        } else {
+          if (remaining.length === 0) {
+            remaining = queue.slice(sentCount);
+          }
+          this.#saveQueue(remaining);
+          if (sentCount > 0) {
+            this.logger?.log(`تم إرسال ${sentCount} طلب/طلبات، تبقى ${remaining.length} في الدفعة`, "warning");
+            this.toast.show(`تم إرسال ${sentCount} طلب/طلبات، وتبقى ${remaining.length}`, "warning");
+          } else {
+            this.logger?.log("لم يتم إرسال أي طلب من الدفعة", "error");
+          }
+        }
+        this.isSubmitting = false;
+      }
+
+      return { sent: sentCount, total: queue.length, remaining: remaining.length };
+    }
+  }
+
   class AvailabilityMonitor {
     constructor(toast, soundPlayer) {
       this.toast = toast;
@@ -1112,6 +1277,7 @@
     const logger = new Logger(logRoot);
     const formBridge = new FormBridge(toast, logger, store, activationService, overlay);
     formBridge.enableFields();
+    const batchManager = new BatchRequestManager(store, toast, formBridge, logger);
 
     const availabilityDot = overlay.querySelector("#availability-dot");
     const availabilityText = overlay.querySelector("#availability-text");
@@ -1159,6 +1325,121 @@
     }
 
     refreshActivationState();
+
+    const queueList = overlay.querySelector("#ext-queue-list");
+    const queueCountLabel = overlay.querySelector("#ext-queue-count");
+    const sendQueueButton = overlay.querySelector("#ext-send-queue");
+    const clearQueueButton = overlay.querySelector("#ext-clear-queue");
+    const addToQueueButton = overlay.querySelector("#ext-add-to-queue");
+    const initialSendLabel = sendQueueButton?.textContent ?? "";
+
+    function renderQueue() {
+      const queue = batchManager.getQueue();
+      if (queueCountLabel) {
+        queueCountLabel.textContent = `عدد الطلبات: ${queue.length}`;
+      }
+      if (sendQueueButton) {
+        sendQueueButton.disabled = batchManager.isSubmitting || queue.length === 0;
+      }
+      if (clearQueueButton) {
+        clearQueueButton.disabled = batchManager.isSubmitting || queue.length === 0;
+      }
+      if (addToQueueButton) {
+        addToQueueButton.disabled = batchManager.isSubmitting;
+      }
+      if (!queueList) {
+        return;
+      }
+      queueList.innerHTML = "";
+      if (queue.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "queue-empty";
+        empty.textContent = "لا توجد طلبات محفوظة حتى الآن";
+        queueList.appendChild(empty);
+        return;
+      }
+      queue.forEach((item, index) => {
+        const row = document.createElement("div");
+        row.className = "queue-item";
+
+        const details = document.createElement("div");
+        details.className = "queue-item-details";
+
+        const title = document.createElement("span");
+        title.className = "queue-item-title";
+        title.textContent = `${item.sellerName} → ${item.buyerName}`;
+        const plate = document.createElement("span");
+        plate.className = "queue-item-plate";
+        plate.textContent = item.plateNumber;
+
+        details.appendChild(title);
+        details.appendChild(plate);
+
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.className = "queue-remove-btn";
+        removeButton.setAttribute("data-queue-action", "remove");
+        removeButton.setAttribute("data-index", String(index));
+        removeButton.title = "حذف الطلب";
+        removeButton.textContent = "✖";
+
+        row.appendChild(details);
+        row.appendChild(removeButton);
+        queueList.appendChild(row);
+      });
+    }
+
+    renderQueue();
+
+    addToQueueButton?.addEventListener("click", () => {
+      const data = formBridge.readFormDataFromInputs();
+      if (batchManager.add(data)) {
+        renderQueue();
+      }
+    });
+
+    queueList?.addEventListener("click", (event) => {
+      const elementTarget = event.target instanceof Element ? event.target : null;
+      const target = elementTarget?.closest("[data-queue-action=\"remove\"]");
+      if (!target) {
+        return;
+      }
+      const index = Number(target.getAttribute("data-index"));
+      if (Number.isNaN(index)) {
+        return;
+      }
+      if (batchManager.remove(index)) {
+        renderQueue();
+      }
+    });
+
+    clearQueueButton?.addEventListener("click", () => {
+      batchManager.clear();
+      renderQueue();
+    });
+
+    sendQueueButton?.addEventListener("click", async () => {
+      if (!sendQueueButton) {
+        return;
+      }
+      const snapshot = batchManager.getQueue();
+      if (snapshot.length === 0) {
+        await batchManager.submitAll();
+        renderQueue();
+        return;
+      }
+      sendQueueButton.disabled = true;
+      sendQueueButton.textContent = "جاري الإرسال...";
+      try {
+        await batchManager.submitAll((index, total) => {
+          sendQueueButton.textContent = `جاري الإرسال (${index + 1}/${total})`;
+        });
+      } finally {
+        sendQueueButton.disabled = false;
+        sendQueueButton.textContent = initialSendLabel;
+        renderQueue();
+      }
+    });
 
     overlay.querySelector("#ext-generate-code")?.addEventListener("click", async () => {
       const days = Number(overlay.querySelector("#ext-generator-days")?.value || "30");
