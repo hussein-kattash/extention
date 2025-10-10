@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Import-Dep Auto Submitter",
+  "version": "1.1",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": ["https://import-dep.mega-sy.com/*"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://import-dep.mega-sy.com/registration*"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "all_frames": false  // Add this line
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "web_accessible_resources": [{
+    "resources": ["styles.css"],
+    "matches": ["https://import-dep.mega-sy.com/*"]
+  }]
+}
