@@ -12,7 +12,7 @@
       "matches": ["https://import-dep.mega-sy.com/registration*"],
       "js": ["content.js"],
       "css": ["styles.css"],
-      "all_frames": false  // Add this line
+      "all_frames": false
     }
   ],
   "background": {

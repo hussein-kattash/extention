@@ -1,1 +1,1283 @@
-const _0x2d86dc=_0x286b;(function(_0x2d64e3,_0x5b56b5){const _0x37e1b3=_0x286b,_0x45a1bf=_0x2d64e3();while(!![]){try{const _0x115a99=-parseInt(_0x37e1b3(0x22a))/0x1+-parseInt(_0x37e1b3(0x196))/0x2+parseInt(_0x37e1b3(0x113))/0x3+-parseInt(_0x37e1b3(0x1ad))/0x4*(parseInt(_0x37e1b3(0x165))/0x5)+parseInt(_0x37e1b3(0x1f2))/0x6+-parseInt(_0x37e1b3(0x20c))/0x7+-parseInt(_0x37e1b3(0x166))/0x8*(-parseInt(_0x37e1b3(0x1c5))/0x9);if(_0x115a99===_0x5b56b5)break;else _0x45a1bf['push'](_0x45a1bf['shift']());}catch(_0x341f62){_0x45a1bf['push'](_0x45a1bf['shift']());}}}(_0x2846,0xb2fe2));let overlayPosition={'top':_0x2d86dc(0x115),'right':'50px','left':_0x2d86dc(0x192)},isMinimized=![],soundEnabled=![],monitoringEnabled=![],submissionInterval=null,autoRefreshInterval=null,availabilityCheckInterval=null,autoSubmitCheckInterval=null,formMonitoringInterval=null,activeMode=null,isSystemAvailable=![],autoSubmitEnabled=![],isExtensionActivated=![],lastDOMCheck=0x0;const DOM_CHECK_INTERVAL=0xfa0;let redirectEnabled=!![];const IMPORT_DEP_ACTIVATION_SECRET=_0x2d86dc(0x189);function createUIOverlay(){const _0xb4e0b0=_0x2d86dc,_0x1100f0=document[_0xb4e0b0(0x1a7)](_0xb4e0b0(0x13a));_0x1100f0['id']=_0xb4e0b0(0x1d2);const _0x3748ec=localStorage[_0xb4e0b0(0x14e)](_0xb4e0b0(0x151)),_0x2f0695=localStorage[_0xb4e0b0(0x14e)]('importDepExtensionState');_0x3748ec&&(overlayPosition=JSON[_0xb4e0b0(0x1c4)](_0x3748ec));if(_0x2f0695){const _0x122ff8=JSON[_0xb4e0b0(0x1c4)](_0x2f0695);isMinimized=_0x122ff8[_0xb4e0b0(0x177)];}_0x1100f0[_0xb4e0b0(0x18c)][_0xb4e0b0(0x1a6)]=_0xb4e0b0(0x122),_0x1100f0['style'][_0xb4e0b0(0xf4)]=overlayPosition['top'],_0x1100f0[_0xb4e0b0(0x18c)][_0xb4e0b0(0x176)]=overlayPosition[_0xb4e0b0(0x176)]||_0xb4e0b0(0x115),_0x1100f0[_0xb4e0b0(0x18c)][_0xb4e0b0(0x19c)]=overlayPosition[_0xb4e0b0(0x19c)]||_0xb4e0b0(0x192),_0x1100f0[_0xb4e0b0(0x1e8)]=_0xb4e0b0(0xe3),document['body'][_0xb4e0b0(0xe4)](_0x1100f0);const _0x526a80=document[_0xb4e0b0(0x1a7)](_0xb4e0b0(0x13a));_0x526a80['id']=_0xb4e0b0(0x1f7),_0x526a80[_0xb4e0b0(0x107)]=_0xb4e0b0(0x120),document['body'][_0xb4e0b0(0xe4)](_0x526a80),initializeActivationSystem()['then'](()=>{setupUIBasedOnActivation();}),document[_0xb4e0b0(0x20f)](_0xb4e0b0(0xfb))[_0xb4e0b0(0x1f5)](_0xb4e0b0(0x221),toggleMinimize),document[_0xb4e0b0(0x20f)](_0xb4e0b0(0x197))[_0xb4e0b0(0x1f5)](_0xb4e0b0(0x221),closeOverlay),document[_0xb4e0b0(0x20f)](_0xb4e0b0(0x1fe))['addEventListener'](_0xb4e0b0(0x221),resetOverlayPosition),makeDraggable(_0x1100f0),setTimeout(()=>{ensureUIVisibility();},0x64);}function setupActivatedExtension(){const _0x599ea9=_0x2d86dc;addIntervalChangeListeners(),loadSavedData(),loadButtonStates(),loadLogs(),monitorOriginalToasts(),startAvailabilityMonitoring(),setupRedirectToggle(),document[_0x599ea9(0x20f)](_0x599ea9(0x18b))[_0x599ea9(0x1f5)](_0x599ea9(0x221),submitOnce),document['getElementById'](_0x599ea9(0x199))[_0x599ea9(0x1f5)](_0x599ea9(0x221),toggleSubmissionLoop),document['getElementById']('ext-auto-refresh')[_0x599ea9(0x1f5)](_0x599ea9(0x221),toggleAutoRefresh),document[_0x599ea9(0x20f)](_0x599ea9(0x21d))[_0x599ea9(0x1f5)](_0x599ea9(0x221),triggerSiteSubmission),document[_0x599ea9(0x20f)](_0x599ea9(0x126))[_0x599ea9(0x1f5)](_0x599ea9(0x221),toggleAutoSubmit),document[_0x599ea9(0x20f)](_0x599ea9(0x211))[_0x599ea9(0x1f5)](_0x599ea9(0x221),saveInputData),document[_0x599ea9(0x20f)]('ext-clear-data')[_0x599ea9(0x1f5)](_0x599ea9(0x221),clearInputData),document[_0x599ea9(0x20f)](_0x599ea9(0x127))[_0x599ea9(0x1f5)](_0x599ea9(0x221),clearLogs);const _0x40bfa6=document['getElementById'](_0x599ea9(0x106));if(_0x40bfa6){_0x40bfa6[_0x599ea9(0x1f5)](_0x599ea9(0x149),function(){const _0x2435d4=_0x599ea9;soundEnabled=this['checked'],localStorage['setItem']('importDepExtensionSoundEnabled',JSON[_0x2435d4(0xee)](soundEnabled)),soundEnabled?(playTestSound(),showExtensionToast(_0x2435d4(0x1ab),'success')):showExtensionToast(_0x2435d4(0x21a),'info');});const _0xc79f83=localStorage[_0x599ea9(0x14e)](_0x599ea9(0x134));_0xc79f83!==null&&(soundEnabled=JSON[_0x599ea9(0x1c4)](_0xc79f83),_0x40bfa6['checked']=soundEnabled);}const _0x57d5c1=document['getElementById']('ext-monitoring-toggle');if(_0x57d5c1){_0x57d5c1[_0x599ea9(0x1f5)]('change',function(){const _0x196880=_0x599ea9;monitoringEnabled=this[_0x196880(0x1a8)],localStorage[_0x196880(0x186)]('importDepExtensionMonitoringEnabled',JSON[_0x196880(0xee)](monitoringEnabled)),monitoringEnabled?(startFormMonitoring(),startAvailabilityMonitoring(),showExtensionToast(_0x196880(0x219),_0x196880(0x1be))):(stopFormMonitoring(),stopAvailabilityMonitoring(),showExtensionToast(_0x196880(0xf9),_0x196880(0x17d))),saveButtonStates();});const _0x18b52b=localStorage[_0x599ea9(0x14e)](_0x599ea9(0x214));_0x18b52b!==null&&(monitoringEnabled=JSON[_0x599ea9(0x1c4)](_0x18b52b),_0x57d5c1['checked']=monitoringEnabled,monitoringEnabled?(showExtensionToast(_0x599ea9(0x1b2),_0x599ea9(0x17d)),setTimeout(()=>{startFormMonitoring();},0x3e8)):(showExtensionToast(_0x599ea9(0x1f3),'info'),stopAvailabilityMonitoring()));}setTimeout(()=>{initializePage();},0xbb8),setTimeout(forceEnableFieldsContinuously,0x7d0);}function setupRedirectToggle(){const _0x25ab78=_0x2d86dc,_0x1e53b2=document[_0x25ab78(0x20f)](_0x25ab78(0x142));if(_0x1e53b2){const _0x3b5e7b=localStorage[_0x25ab78(0x14e)](_0x25ab78(0x1b7));_0x3b5e7b!==null?(redirectEnabled=JSON['parse'](_0x3b5e7b),_0x1e53b2[_0x25ab78(0x1a8)]=redirectEnabled):(redirectEnabled=!![],_0x1e53b2[_0x25ab78(0x1a8)]=!![],localStorage['setItem'](_0x25ab78(0x1b7),JSON[_0x25ab78(0xee)](!![]))),_0x1e53b2[_0x25ab78(0x1f5)](_0x25ab78(0x149),function(){const _0x46834d=_0x25ab78;redirectEnabled=this['checked'],localStorage[_0x46834d(0x186)](_0x46834d(0x1b7),JSON[_0x46834d(0xee)](redirectEnabled)),showExtensionToast(redirectEnabled?_0x46834d(0x21f):_0x46834d(0x1af),_0x46834d(0x17d));});}}function playTestSound(){const _0x2a8c18=_0x2d86dc;if(!soundEnabled)return;try{const _0x2f6539=new(window[(_0x2a8c18(0x19d))]||window[(_0x2a8c18(0x1ef))])(),_0x468a67=_0x2f6539['createOscillator'](),_0x16bda4=_0x2f6539[_0x2a8c18(0x111)]();_0x468a67[_0x2a8c18(0x1a2)]=_0x2a8c18(0x1d7),_0x468a67[_0x2a8c18(0x1eb)]['setValueAtTime'](0x258,_0x2f6539[_0x2a8c18(0x245)]),_0x16bda4[_0x2a8c18(0x1de)][_0x2a8c18(0x1e1)](0.2,_0x2f6539[_0x2a8c18(0x245)]),_0x16bda4[_0x2a8c18(0x1de)][_0x2a8c18(0x24b)](0.01,_0x2f6539[_0x2a8c18(0x245)]+0.3),_0x468a67['connect'](_0x16bda4),_0x16bda4[_0x2a8c18(0x1fc)](_0x2f6539[_0x2a8c18(0x19a)]),_0x468a67[_0x2a8c18(0x19e)](),_0x468a67[_0x2a8c18(0x1b5)](_0x2f6539['currentTime']+0.3);}catch(_0x383709){console['log']('Cannot\x20play\x20test\x20sound');}}function showExpiryInfo(_0x3ab3bb){const _0x49f4c7=_0x2d86dc;try{const [_0xb82d13,_0xeab3ec]=_0x3ab3bb[_0x49f4c7(0x1c7)]('\x20'),[_0x372483,_0xdaf1a,_0x3b420f]=_0xb82d13[_0x49f4c7(0x1c7)]('-')['map'](Number),[_0x272471,_0x33da3a]=_0xeab3ec['split'](':')[_0x49f4c7(0x185)](Number),_0x2d3089=new Date(_0x372483,_0xdaf1a-0x1,_0x3b420f,_0x272471,_0x33da3a),_0x598243=new Date(),_0x4a724f=_0x2d3089[_0x49f4c7(0x16c)]()-_0x598243[_0x49f4c7(0x16c)](),_0xfd370c=Math['ceil'](_0x4a724f/(0x3e8*0xe10*0x18)),_0x252e91=_0x3b420f['toString']()[_0x49f4c7(0x12e)](0x2,'0')+'/'+_0xdaf1a[_0x49f4c7(0x240)]()[_0x49f4c7(0x12e)](0x2,'0')+'/'+_0x372483,_0x3d293e=document[_0x49f4c7(0x20f)]('header-expiry-info');if(_0x3d293e){let _0x176fd5='expiry-badge',_0x16706e='';if(_0xfd370c<0x0)_0x176fd5+=_0x49f4c7(0x144),_0x16706e='⏰\x20منتهية';else _0xfd370c<=0x3?(_0x176fd5+=_0x49f4c7(0x23e),_0x16706e='⏳\x20'+_0x252e91):_0x16706e='✅\x20'+_0x252e91;_0x3d293e[_0x49f4c7(0x1e8)]=_0x49f4c7(0xde)+_0x176fd5+'\x22>'+_0x16706e+'</span>',_0x3d293e[_0x49f4c7(0x18c)][_0x49f4c7(0x14a)]=_0x49f4c7(0x1ca);const _0x30f27d=_0x3d293e[_0x49f4c7(0x210)](_0x49f4c7(0x24e));_0x30f27d&&(_0x30f27d[_0x49f4c7(0x12c)]=_0x49f4c7(0x1fd)+_0x252e91+'\x0a'+(_0xfd370c>=0x0?_0x49f4c7(0x17e)+_0xfd370c+_0x49f4c7(0x170):_0x49f4c7(0x11d)));}document['getElementById'](_0x49f4c7(0xfe))[_0x49f4c7(0x18c)][_0x49f4c7(0x14a)]='none',document[_0x49f4c7(0x210)](_0x49f4c7(0x12b))[_0x49f4c7(0x1bc)]=_0x49f4c7(0x237);}catch(_0x4959fa){console[_0x49f4c7(0x207)](_0x49f4c7(0x1a4),_0x4959fa);}}async function setupUIBasedOnActivation(){const _0x23b46f=_0x2d86dc;isExtensionActivated=await checkActivation();if(isExtensionActivated)document['getElementById'](_0x23b46f(0x1d8))[_0x23b46f(0x18c)][_0x23b46f(0x14a)]=_0x23b46f(0x229),document['getElementById']('main-controls-panel')[_0x23b46f(0x18c)]['display']=_0x23b46f(0xec),setupActivatedExtension();else{document['getElementById'](_0x23b46f(0x1d8))['style'][_0x23b46f(0x14a)]=_0x23b46f(0xec),document[_0x23b46f(0x20f)](_0x23b46f(0x164))[_0x23b46f(0x18c)][_0x23b46f(0x14a)]=_0x23b46f(0x229);const _0x3b5527=await getDeviceId();document['getElementById'](_0x23b46f(0xea))[_0x23b46f(0x1bc)]='معرف\x20الجهاز:\x20'+_0x3b5527;}!isExtensionActivated&&document[_0x23b46f(0x20f)](_0x23b46f(0x191))[_0x23b46f(0x1f5)](_0x23b46f(0x221),handleActivation);restoreMinimizedState();if(isExtensionActivated){const _0x243d41=document[_0x23b46f(0x20f)](_0x23b46f(0x1d8));_0x243d41&&(_0x243d41[_0x23b46f(0x18c)][_0x23b46f(0x14a)]=_0x23b46f(0x229));}}async function handleActivation(){const _0x158275=_0x2d86dc,_0x8c6fd5=document[_0x158275(0x20f)](_0x158275(0x1a5))['value']['trim']();if(!_0x8c6fd5){showExtensionToast(_0x158275(0x160),_0x158275(0x207));return;}const _0x22d495=await getDeviceId(),_0x1ec99f=validateActivationCode(_0x8c6fd5,_0x22d495);_0x1ec99f['valid']?chrome[_0x158275(0x139)][_0x158275(0x1ed)][_0x158275(0x233)]({'importdep_activated':!![],'importdep_expiry_datetime':_0x1ec99f[_0x158275(0x1c9)]},function(){const _0x3dff82=_0x158275;if(chrome[_0x3dff82(0x1a1)][_0x3dff82(0xe5)]){showExtensionToast(_0x3dff82(0xe8),_0x3dff82(0x207));return;}showExtensionToast(_0x3dff82(0x1f0),_0x3dff82(0x1be)),setTimeout(()=>{const _0x1b16a2=_0x3dff82;location[_0x1b16a2(0x117)]();},0x5dc);}):_0x1ec99f[_0x158275(0x1d3)]==='Code\x20expired'&&_0x1ec99f[_0x158275(0x1c9)]?showExtensionToast(_0x158275(0xef)+_0x1ec99f['expiryDateTime'],'error'):showExtensionToast(_0x158275(0x1e5)+_0x1ec99f[_0x158275(0x1d3)],_0x158275(0x207));}function restoreMinimizedState(){const _0x3172f7=_0x2d86dc,_0x5a5a42=localStorage[_0x3172f7(0x14e)]('importDepExtensionState');if(_0x5a5a42){const _0x124967=JSON[_0x3172f7(0x1c4)](_0x5a5a42);isMinimized=_0x124967[_0x3172f7(0x177)];if(isMinimized){const _0x5d1139=document['querySelectorAll'](_0x3172f7(0x105));_0x5d1139['forEach'](_0x2aaff4=>{const _0x4de0b2=_0x3172f7;_0x2aaff4[_0x4de0b2(0x18c)][_0x4de0b2(0x14a)]=_0x4de0b2(0x229);});const _0x1687b8=document[_0x3172f7(0x20f)]('ext-minimize-btn');_0x1687b8&&(_0x1687b8[_0x3172f7(0x1bc)]='+');}else{if(isExtensionActivated){const _0x367187=document['getElementById'](_0x3172f7(0x1d8));_0x367187&&(_0x367187['style'][_0x3172f7(0x14a)]=_0x3172f7(0x229));}}}}function toggleMinimize(){const _0x4c4796=_0x2d86dc,_0x219653=document[_0x4c4796(0x20f)]('ext-minimize-btn'),_0x14ecab=document[_0x4c4796(0x22b)]('.hidden-when-minimized');if(!_0x219653)return;isMinimized?(_0x14ecab[_0x4c4796(0x147)](_0x38c7a7=>{const _0xbe3baa=_0x4c4796;_0x38c7a7['id']==='activation-panel'&&isExtensionActivated?_0x38c7a7[_0xbe3baa(0x18c)]['display']=_0xbe3baa(0x229):_0x38c7a7[_0xbe3baa(0x18c)][_0xbe3baa(0x14a)]=_0xbe3baa(0xec);}),_0x219653[_0x4c4796(0x1bc)]='−',isMinimized=![]):(_0x14ecab[_0x4c4796(0x147)](_0x28600e=>{const _0x2ae5ce=_0x4c4796;_0x28600e[_0x2ae5ce(0x18c)]['display']=_0x2ae5ce(0x229);}),_0x219653['textContent']='+',isMinimized=!![]),localStorage[_0x4c4796(0x186)](_0x4c4796(0x24a),JSON[_0x4c4796(0xee)]({'minimized':isMinimized}));}const generatePersistentDeviceId=async()=>{const _0x168bbd=_0x2d86dc;try{const _0x450f18=navigator['userAgent'],_0x39c6c5=navigator[_0x168bbd(0x13e)],_0x50fc47=Intl[_0x168bbd(0x1dc)]()['resolvedOptions']()[_0x168bbd(0x14d)],_0x11a82f=screen[_0x168bbd(0x158)]+'x'+screen[_0x168bbd(0x1d5)]+'-'+screen[_0x168bbd(0x171)],_0x521913=await getCanvasFingerprint(),_0x1b81eb=_0x450f18+'|'+_0x39c6c5+'|'+_0x50fc47+'|'+_0x11a82f+'|'+_0x521913;let _0x4183ed=0x0;for(let _0x467275=0x0;_0x467275<_0x1b81eb[_0x168bbd(0x172)];_0x467275++){const _0x352901=_0x1b81eb['charCodeAt'](_0x467275);_0x4183ed=(_0x4183ed<<0x5)-_0x4183ed+_0x352901,_0x4183ed=_0x4183ed&_0x4183ed;}return Math['abs'](_0x4183ed)[_0x168bbd(0x240)](0x10)['substring'](0x0,0xc);}catch(_0xc9818b){return'importdep-'+Math[_0x168bbd(0x188)]()[_0x168bbd(0x240)](0x24)[_0x168bbd(0x11c)](0x2,0xc);}},getCanvasFingerprint=()=>{return new Promise(_0x2082f9=>{const _0x3728e8=_0x286b;try{const _0x2ef59c=document[_0x3728e8(0x1a7)]('canvas'),_0x100c66=_0x2ef59c[_0x3728e8(0x217)]('2d');_0x2ef59c[_0x3728e8(0x158)]=0xc8,_0x2ef59c[_0x3728e8(0x1d5)]=0x32,_0x100c66[_0x3728e8(0x200)]=_0x3728e8(0xf4),_0x100c66['font']='14px\x20\x27Arial\x27',_0x100c66[_0x3728e8(0x1a0)]=_0x3728e8(0x17a),_0x100c66[_0x3728e8(0x18a)](0x7d,0x1,0x3e,0x14),_0x100c66[_0x3728e8(0x1a0)]=_0x3728e8(0x1f6),_0x100c66[_0x3728e8(0x153)]('Import\x20Dep\x20Helper',0x2,0xf),_0x100c66[_0x3728e8(0x1a0)]='rgba(102,\x20204,\x200,\x200.7)',_0x100c66[_0x3728e8(0x153)]('Import\x20Dep\x20Helper',0x4,0x11);const _0x45a754=_0x2ef59c[_0x3728e8(0x1cf)]();let _0x24bc60=0x0;for(let _0x2efb6c=0x0;_0x2efb6c<_0x45a754['length'];_0x2efb6c++){const _0x3b166f=_0x45a754[_0x3728e8(0x1a9)](_0x2efb6c);_0x24bc60=(_0x24bc60<<0x5)-_0x24bc60+_0x3b166f,_0x24bc60=_0x24bc60&_0x24bc60;}_0x2082f9(Math[_0x3728e8(0x220)](_0x24bc60)['toString'](0x10)['substring'](0x0,0x8));}catch(_0x57792b){_0x2082f9(_0x3728e8(0x226));}});},getDeviceId=async()=>{return new Promise(_0x268356=>{const _0x5585fd=_0x286b;chrome[_0x5585fd(0x139)][_0x5585fd(0x1ed)][_0x5585fd(0x205)](['importdep_device_id'],async function(_0x38199b){const _0x19e74c=_0x5585fd;if(_0x38199b[_0x19e74c(0x213)])_0x268356(_0x38199b[_0x19e74c(0x213)]);else{const _0x1fedf7=await generatePersistentDeviceId();chrome['storage'][_0x19e74c(0x1ed)][_0x19e74c(0x233)]({'importdep_device_id':_0x1fedf7},function(){const _0x13ca32=_0x19e74c;!chrome[_0x13ca32(0x1a1)]['lastError']?_0x268356(_0x1fedf7):_0x268356('importdep-'+Math[_0x13ca32(0x188)]()[_0x13ca32(0x240)](0x24)[_0x13ca32(0x11c)](0x2,0xc));});}});});},checkActivation=async()=>{return new Promise(_0x17707b=>{const _0x5e6d7b=_0x286b;chrome['storage'][_0x5e6d7b(0x1ed)]['get']([_0x5e6d7b(0x1cb),'importdep_expiry_datetime'],function(_0x30941d){const _0xfda62b=_0x5e6d7b;if(chrome[_0xfda62b(0x1a1)]['lastError']){_0x17707b(![]);return;}if(_0x30941d[_0xfda62b(0x1cb)]&&_0x30941d[_0xfda62b(0x140)]){const _0x21b025=new Date();let _0x44d30f;try{const [_0x460942,_0x52692e]=_0x30941d[_0xfda62b(0x140)][_0xfda62b(0x1c7)]('\x20'),[_0x471646,_0x13fe65,_0x5c43f0]=_0x460942[_0xfda62b(0x1c7)]('-')[_0xfda62b(0x185)](Number),[_0x389055,_0x2d60c9]=_0x52692e[_0xfda62b(0x1c7)](':')[_0xfda62b(0x185)](Number);_0x44d30f=new Date(_0x471646,_0x13fe65-0x1,_0x5c43f0,_0x389055,_0x2d60c9);if(isNaN(_0x44d30f[_0xfda62b(0x16c)]())){_0x17707b(![]);return;}_0x17707b(_0x21b025<=_0x44d30f);}catch(_0x59d2d0){_0x17707b(![]);}}else _0x17707b(![]);});});},decodeActivationCode=_0x285bbb=>{const _0x1c562b=_0x2d86dc;try{const _0x15b136=atob(_0x285bbb),_0xf62b58=[0x2,0x5,0x9,0xe];let _0x466b51='',_0xc5f911=0x0;for(let _0x4a2a21=0x0;_0x4a2a21<_0x15b136['length'];_0x4a2a21++){_0xf62b58['includes'](_0x4a2a21)?_0xc5f911++:_0x466b51+=_0x15b136[_0x4a2a21];}_0x466b51=_0x466b51[_0x1c562b(0x1c7)]('')[_0x1c562b(0x23d)]()[_0x1c562b(0x128)]('');const _0x444d0a=_0x466b51[_0x1c562b(0x1c7)]('|');if(_0x444d0a[_0x1c562b(0x172)]===0x2)return{'deviceId':_0x444d0a[0x0],'expiryDateTime':_0x444d0a[0x1]};}catch(_0x4964a3){console[_0x1c562b(0x207)](_0x1c562b(0xf0),_0x4964a3);}return null;};function formatGregorianDate(_0x50126f){const _0x2f0cbc=_0x2d86dc,_0x312ae6=_0x50126f['getDate']()['toString']()[_0x2f0cbc(0x12e)](0x2,'0'),_0x52323a=(_0x50126f[_0x2f0cbc(0x145)]()+0x1)['toString']()[_0x2f0cbc(0x12e)](0x2,'0'),_0x2a8b22=_0x50126f['getFullYear'](),_0x5b07b2=_0x50126f['getHours']()[_0x2f0cbc(0x240)]()[_0x2f0cbc(0x12e)](0x2,'0'),_0x515ae4=_0x50126f[_0x2f0cbc(0x190)]()[_0x2f0cbc(0x240)]()['padStart'](0x2,'0'),_0x5b8f4e=_0x312ae6+'/'+_0x52323a+'/'+_0x2a8b22+'\x20'+_0x5b07b2+':'+_0x515ae4;return'‫'+_0x5b8f4e+'‬';}const validateActivationCode=(_0x2a971f,_0x2e75fd)=>{const _0x2738f7=_0x2d86dc,_0x445fe8=decodeActivationCode(_0x2a971f);if(!_0x445fe8)return{'valid':![],'reason':_0x2738f7(0x167)};if(_0x445fe8[_0x2738f7(0x156)]!==_0x2e75fd)return{'valid':![],'reason':_0x2738f7(0x241)};const _0x1ff27b=new Date();let _0x532954;try{const [_0xbbdb7b,_0x1ee91a]=_0x445fe8[_0x2738f7(0x1c9)]['split']('\x20'),[_0x3fdc1d,_0x2d7e12,_0x4ad92c]=_0xbbdb7b[_0x2738f7(0x1c7)]('-')['map'](Number),[_0xe44288,_0x2dc000]=_0x1ee91a[_0x2738f7(0x1c7)](':')[_0x2738f7(0x185)](Number);_0x532954=new Date(_0x3fdc1d,_0x2d7e12-0x1,_0x4ad92c,_0xe44288,_0x2dc000);}catch(_0x43f96a){return{'valid':![],'reason':_0x2738f7(0x1db)};}if(_0x1ff27b>_0x532954){const _0x20e746=formatGregorianDate(_0x532954);return{'valid':![],'reason':_0x2738f7(0x184),'expiryDateTime':_0x20e746};}return{'valid':!![],'expiryDateTime':_0x445fe8[_0x2738f7(0x1c9)]};};async function initializeActivationSystem(){const _0x53bd6d=_0x2d86dc,_0x211c43=await checkActivation();_0x211c43&&chrome[_0x53bd6d(0x139)]['local'][_0x53bd6d(0x205)]([_0x53bd6d(0x140)],function(_0x5ebcb2){const _0x182686=_0x53bd6d;!chrome['runtime']['lastError']&&_0x5ebcb2[_0x182686(0x140)]&&showExpiryInfo(_0x5ebcb2['importdep_expiry_datetime']);});}function makeDraggable(_0x213bcc){const _0xc795=_0x2d86dc;let _0x1c3d1a=![],_0x212059=0x0,_0x4591dc=0x0,_0x2e71d1=0x0,_0x4067a9=0x0,_0x160b81=0x0,_0x5e2ac3=0x0;const _0x5dae03=_0x213bcc[_0xc795(0x210)](_0xc795(0x1ee)),_0x157458=localStorage[_0xc795(0x14e)]('importDepExtensionPosition');if(_0x157458){const _0x365aea=JSON['parse'](_0x157458);_0x365aea['translateX']!==undefined&&_0x365aea[_0xc795(0x22f)]!==undefined&&(_0x160b81=_0x365aea['translateX'],_0x5e2ac3=_0x365aea[_0xc795(0x22f)],_0x2c926f(_0x160b81,_0x5e2ac3,_0x213bcc));}_0x5dae03['addEventListener']('mousedown',_0x23c7b4),document['addEventListener'](_0xc795(0xeb),_0x1de022),document['addEventListener']('mousemove',_0x30e82e);function _0x23c7b4(_0x20e56f){const _0x17136a=_0xc795;_0x2e71d1=_0x20e56f[_0x17136a(0x15c)]-_0x160b81,_0x4067a9=_0x20e56f[_0x17136a(0x16a)]-_0x5e2ac3,(_0x20e56f[_0x17136a(0x1e6)]===_0x5dae03||_0x5dae03[_0x17136a(0x13c)](_0x20e56f['target']))&&(_0x1c3d1a=!![],_0x213bcc['style'][_0x17136a(0x247)]=_0x17136a(0x131));}function _0x1de022(_0x56398f){const _0x4a250c=_0xc795;_0x1c3d1a=![],_0x213bcc['style']['cursor']=_0x4a250c(0xff),saveOverlayPosition();}function _0x30e82e(_0x5d6163){const _0x5e1e7f=_0xc795;_0x1c3d1a&&(_0x5d6163['preventDefault'](),_0x212059=_0x5d6163[_0x5e1e7f(0x15c)]-_0x2e71d1,_0x4591dc=_0x5d6163[_0x5e1e7f(0x16a)]-_0x4067a9,_0x160b81=_0x212059,_0x5e2ac3=_0x4591dc,_0x2c926f(_0x160b81,_0x5e2ac3,_0x213bcc));}function _0x2c926f(_0x412631,_0x1bb5cd,_0x19d595){const _0x41433d=_0xc795;_0x19d595[_0x41433d(0x18c)][_0x41433d(0x204)]='translate3d('+_0x412631+'px,\x20'+_0x1bb5cd+_0x41433d(0x173);}_0x5dae03[_0xc795(0x18c)][_0xc795(0x247)]='grab';}function saveOverlayPosition(){const _0x3ba78b=_0x2d86dc,_0x1ddf6d=document['getElementById'](_0x3ba78b(0x1d2));if(_0x1ddf6d){const _0x19feea=window[_0x3ba78b(0x121)](_0x1ddf6d),_0x3d22cd=new DOMMatrixReadOnly(_0x19feea[_0x3ba78b(0x204)]);overlayPosition={'top':_0x1ddf6d['style'][_0x3ba78b(0xf4)],'right':_0x1ddf6d[_0x3ba78b(0x18c)][_0x3ba78b(0x176)],'left':_0x1ddf6d['style'][_0x3ba78b(0x19c)],'translateX':_0x3d22cd[_0x3ba78b(0x12d)],'translateY':_0x3d22cd[_0x3ba78b(0x154)]},localStorage[_0x3ba78b(0x186)]('importDepExtensionPosition',JSON[_0x3ba78b(0xee)](overlayPosition));}}function resetOverlayPosition(){const _0x531c94=_0x2d86dc,_0x4b75f8=document['getElementById'](_0x531c94(0x1d2));_0x4b75f8&&(_0x4b75f8['style']['transform']=_0x531c94(0xdc),_0x4b75f8[_0x531c94(0x18c)][_0x531c94(0xf4)]=_0x531c94(0x115),_0x4b75f8[_0x531c94(0x18c)][_0x531c94(0x176)]=_0x531c94(0x115),_0x4b75f8[_0x531c94(0x18c)][_0x531c94(0x19c)]=_0x531c94(0x192),localStorage[_0x531c94(0x235)](_0x531c94(0x151)),showExtensionToast(_0x531c94(0x103),_0x531c94(0x17d)));}function ensureUIVisibility(){const _0x44573c=_0x2d86dc,_0x45cf5f=document[_0x44573c(0x20f)](_0x44573c(0x1d2));if(!_0x45cf5f)return;const _0x232b53=_0x45cf5f['getBoundingClientRect'](),_0x46043f=window['innerWidth'],_0x12f886=window[_0x44573c(0x118)];(_0x232b53['right']<0x0||_0x232b53['bottom']<0x0||_0x232b53['left']>_0x46043f||_0x232b53['top']>_0x12f886)&&resetOverlayPosition();}function closeOverlay(){const _0x2127f2=_0x2d86dc,_0x171583=document['getElementById'](_0x2127f2(0x1d2));_0x171583&&(_0x171583[_0x2127f2(0x18c)][_0x2127f2(0x14a)]=_0x2127f2(0x229));}function initializePage(){startDwellTimerAutomatically(),monitorFieldStatus();}function scrollToBottom(){const _0x53a516=_0x2d86dc;window['scrollTo']({'top':document['body'][_0x53a516(0x19f)],'behavior':_0x53a516(0x23f)});}function redirectToRegistration(){const _0x41b156=_0x2d86dc;window['location'][_0x41b156(0x216)]=_0x41b156(0x22c);}function startDwellTimerAutomatically(){const _0x22440b=_0x2d86dc;try{enableFieldsPersistently();const _0x3a605d=document['getElementById'](_0x22440b(0x17c)),_0x220b70=document[_0x22440b(0x20f)](_0x22440b(0x1b6)),_0x4d6a9b=document[_0x22440b(0x20f)](_0x22440b(0x1d9)),_0x5cbf18=document['getElementById'](_0x22440b(0x1e9));if(!_0x3a605d||!_0x220b70||!_0x4d6a9b||!_0x5cbf18){console[_0x22440b(0x148)]('Form\x20fields\x20not\x20found,\x20retrying...'),setTimeout(startDwellTimerAutomatically,0x3e8);return;}console[_0x22440b(0x148)](_0x22440b(0xf3)),setTimeout(()=>{const _0x58b69f=_0x22440b,_0x302fdf=[_0x3a605d,_0x220b70,_0x4d6a9b];_0x302fdf[_0x58b69f(0x147)]((_0x4dea91,_0x12f355)=>{setTimeout(()=>{const _0x399535=_0x286b;_0x4dea91['focus'](),_0x4dea91[_0x399535(0x202)](new Event(_0x399535(0x1b1),{'bubbles':!![]})),_0x4dea91['dispatchEvent'](new Event(_0x399535(0x180),{'bubbles':!![]}));const _0x5ef63f=_0x4dea91[_0x399535(0x152)];!_0x5ef63f?(_0x4dea91[_0x399535(0x152)]='x',setTimeout(()=>{const _0x45acbe=_0x399535;_0x4dea91['value']='',_0x4dea91['dispatchEvent'](new Event(_0x45acbe(0x246),{'bubbles':!![]}));},0x32)):_0x4dea91['dispatchEvent'](new Event(_0x399535(0x246),{'bubbles':!![]})),_0x4dea91[_0x399535(0x202)](new KeyboardEvent(_0x399535(0x198),{'key':'a','bubbles':!![]})),_0x4dea91['dispatchEvent'](new KeyboardEvent(_0x399535(0x1ce),{'key':'a','bubbles':!![]})),console[_0x399535(0x148)](_0x399535(0x187)+_0x12f355),setTimeout(()=>{const _0x27017e=_0x399535;_0x4dea91[_0x27017e(0x135)](),_0x4dea91[_0x27017e(0x202)](new Event(_0x27017e(0x135),{'bubbles':!![]}));},0x64);},_0x12f355*0x1f4);}),setTimeout(()=>{const _0x264be0=_0x58b69f;console[_0x264be0(0x148)](_0x264be0(0xf7));const _0x1e3b85=!_0x5cbf18[_0x264be0(0x12f)]&&[_0x3a605d,_0x220b70,_0x4d6a9b]['every'](_0x3a9b99=>!_0x3a9b99[_0x264be0(0x12f)]&&!_0x3a9b99[_0x264be0(0x20e)]);_0x1e3b85?showExtensionToast(_0x264be0(0xe6),_0x264be0(0x1be)):console[_0x264be0(0x148)]('Fields\x20still\x20disabled,\x20will\x20retry...');},_0x302fdf[_0x58b69f(0x172)]*0x1f4+0xc8);},0x3e8);}catch(_0x736efe){console[_0x22440b(0x207)]('Error\x20in\x20dwell\x20timer\x20automation:',_0x736efe),setTimeout(startDwellTimerAutomatically,0x7d0);}}function enableFieldsPersistently(){const _0x1d9c60=_0x2d86dc,_0x2a55d6=document[_0x1d9c60(0x20f)](_0x1d9c60(0x1e9)),_0x5914ae=document[_0x1d9c60(0x20f)](_0x1d9c60(0x17c)),_0x4bdfcf=document[_0x1d9c60(0x20f)](_0x1d9c60(0x1b6)),_0x137c35=document[_0x1d9c60(0x20f)](_0x1d9c60(0x1d9));_0x2a55d6&&_0x2a55d6['disabled']&&(_0x2a55d6[_0x1d9c60(0x12f)]=![],console[_0x1d9c60(0x148)](_0x1d9c60(0x23a))),[_0x5914ae,_0x4bdfcf,_0x137c35][_0x1d9c60(0x147)]((_0x43622a,_0x43eb12)=>{const _0x1cd7db=_0x1d9c60;_0x43622a&&(_0x43622a[_0x1cd7db(0x12f)]&&(_0x43622a['disabled']=![]),_0x43622a[_0x1cd7db(0x20e)]&&(_0x43622a[_0x1cd7db(0x20e)]=![]),_0x43622a[_0x1cd7db(0x18c)]['pointerEvents']=_0x1cd7db(0x192),_0x43622a[_0x1cd7db(0x18c)]['opacity']='1',_0x43622a[_0x1cd7db(0x18c)][_0x1cd7db(0x247)]=_0x1cd7db(0xdd),_0x43622a[_0x1cd7db(0xe9)]=null,_0x43622a['onfocus']=null,_0x43622a[_0x1cd7db(0x225)]=null);}),setTimeout(enableFieldsPersistently,0x3e8);}function _0x2846(){const _0x33d55e=['1888HcTleF','Invalid\x20code\x20format','scrollTop','.alert-error','clientY','ext-plate-number','getTime','loop','captcha','status','\x20يوم','colorDepth','length','px,\x200)','data-error','cf-','right','minimized','main','تفاصيل\x20الموعد:\x20','#f60','includes','seller_name','info','متبقي:\x20','cloneNode','mouseenter','toLocaleTimeString','اكتشف\x20','POST','Code\x20expired','map','setItem','Triggered\x20events\x20for\x20field\x20','random','IMPORTDEP2024','fillRect','ext-submit-once','style','bg-red-400','تم\x20رفض\x20الطلب،\x20جاري\x20تحديث\x20الصفحة...','text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8','getMinutes','ext-activate-btn','auto','interval','تم\x20إرسال\x20الطلب\x20-\x20جاري\x20التحقق\x20من\x20النتيجة...','availability-dot','410236popjLq','ext-close-btn','keydown','ext-submit-loop','destination','children','left','AudioContext','start','scrollHeight','fillStyle','runtime','type','FormData\x20contents:','Error\x20showing\x20expiry\x20info:','ext-activation-code','position','createElement','checked','charCodeAt','parentNode','🔊\x20تم\x20تفعيل\x20الصوت','submitBtn','8zOTAxJ','input[name=\x22cf-chl-widget-f5s01_response\x22]','⏹️\x20تم\x20تعطيل\x20إعادة\x20التوجيه','loading','focus','✅\x20المراقبة\x20مفعلة\x20-\x20جاري\x20فحص\x20النظام','خطأ\x20في\x20التحقق\x20-\x20جاري\x20تحديث\x20الصفحة...','redirectEnabled','stop','buyer_name','importDepExtensionRedirectEnabled','plateDisabled','noRedirect','parseFromString','server-toast-data','textContent','unknown','success','تم\x20تحديث\x20الفاصل\x20الزمني\x20للتحديث\x20التلقائي\x20إلى\x20','started_at','availability-text\x20stopped','جاري\x20تحديث\x20الصفحة...','input[name=\x22hmac\x22]','parse','18567jLohRm','pointer','split','خطأ:\x20لا\x20يمكن\x20العثور\x20على\x20نموذج\x20الطلب','expiryDateTime','flex','importdep_activated','bg-green-400','auto-submit','keyup','toDataURL','تم\x20تسجيل\x20طلبك\x20بنجاح!','النظام\x20متاح\x20✅','import-dep-extension-ui','reason','getAttribute','height','ext-refresh-interval','sine','activation-panel','plate_number','text/html','Invalid\x20datetime\x20format','DateTimeFormat','turnstile','gain','جاري\x20إعادة\x20التوجيه...','buyerName','setValueAtTime','النظام\x20متاح\x20-\x20جاري\x20الإرسال\x20التلقائي...','20px','ext-buyer-name','رمز\x20التفعيل\x20غير\x20صالح:\x20','target','company','innerHTML','formFields','add','frequency','sellerDisabled','local','.extension-header','webkitAudioContext','تم\x20التفعيل\x20بنجاح!',',\x20اللوحة:\x20','7649778XiRvuH','⏸️\x20المراقبة\x20معطلة','orderForm','addEventListener','#069','ext-toast-root','تم\x20تفعيل\x20التحديث\x20التلقائي\x20كل\x20','nodeType','autoRefreshIntervalActive','buyerDisabled','connect','صلاحية\x20الإضافة\x20حتى:\x20','ext-reset-btn','importDepButtonStates','textBaseline','التحديث\x20التلقائي\x20معطل\x20-\x20إعادة\x20التوجيه\x20معطلة','dispatchEvent','فشل\x20التحقق\x20من\x20سلامة\x20النموذج','transform','get','addedNodes','error','تم\x20اكتشاف\x20تغيير\x20في\x20حقول\x20النموذج:\x20','readonly','DOMContentLoaded','sellerName','3658788skmiea','hidden','readOnly','getElementById','querySelector','ext-save-data','trim','importdep_device_id','importDepExtensionMonitoringEnabled','خطأ:\x20جميع\x20الحقول\x20مطلوبة','href','getContext','honeypot','✅\x20تم\x20تفعيل\x20المراقبة\x20-\x20جاري\x20فحص\x20النظام','🔇\x20تم\x20إيقاف\x20الصوت','plateNumber','تم\x20مسح\x20البيانات\x20بنجاح','ext-trigger-submit','addListener','✅\x20تم\x20تفعيل\x20إعادة\x20التوجيه','abs','click','importDepExtensionLogs','تم\x20اكتشاف\x20الحقول\x20التلقائي:','ext-interval','onkeydown','canvas-error','availability-text\x20available','خطأ\x20في\x20الاتصال:\x20','none','775931FrkBTU','querySelectorAll','https://import-dep.mega-sy.com/registration','تم\x20حفظ\x20البيانات\x20بنجاح','جاري\x20الفحص...','translateY','remove','Redirected\x20after\x203\x20seconds','availability-dot\x20available','set','childList','removeItem','تم\x20إيقاف\x20جميع\x20عمليات\x20المراقبة\x20بعد\x20النجاح','✅\x20الإضافة\x20مفعلة','تم\x20إيقاف\x20الإرسال\x20المتكرر','ext-auto-refresh','Fieldset\x20enabled','تم\x20إرسال\x20الطلب\x20-\x20إعادة\x20التوجيه\x20معطلة','availability-text\x20unavailable','reverse','\x20warning','smooth','toString','Device\x20ID\x20mismatch','name','response-entry','input,\x20select,\x20textarea','currentTime','input','cursor','Error\x20loading\x20button\x20states:','BUTTON','importDepExtensionState','exponentialRampToValueAtTime','الرجاء\x20تفعيل\x20الإضافة\x20أولاً','CAPTCHA\x20مطلوب','.expiry-badge','بدأ\x20الإرسال\x20المتكرر\x20بفاصل\x20زمني\x20','opacity','alert-error','attributes','translate3d(0px,\x200px,\x200px)','text','<span\x20class=\x22','Error\x20loading\x20saved\x20data:','readyState','timedOut','#cf-content,\x20[data-translate=\x22challenge_page\x22],\x20.cf-browser-verification','\x0a\x20\x20\x20\x20<div\x20class=\x22extension-header\x22>\x0a\x20\x20\x20\x20\x20\x20<div\x20class=\x22header-title\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<span>🔄لوحة\x20التحكم</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22header-expiry-info\x22\x20class=\x22header-expiry-info\x22\x20style=\x22display:\x20none;\x22></div>\x0a\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20<div\x20class=\x22header-controls\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22ext-reset-btn\x22\x20class=\x22header-btn\x22\x20title=\x22إعادة\x20تعيين\x20الموضع\x22>↻</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22ext-minimize-btn\x22\x20class=\x22header-btn\x22>−</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22ext-close-btn\x22\x20class=\x22header-btn\x22>×</button>\x0a\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20<div\x20class=\x22extension-content\x22>\x0a\x20\x20\x20\x20\x20\x20<!--\x20Activation\x20Panel\x20(Separate\x20and\x20hidden\x20when\x20minimized)\x20-->\x0a\x20\x20\x20\x20\x20\x20<div\x20id=\x22activation-panel\x22\x20class=\x22activation-panel\x20hidden-when-minimized\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22activation-message\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h4>🔒\x20تفعيل\x20الإضافة</h4>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22activation-content\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22input-group\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label\x20for=\x22ext-activation-code\x22>رمز\x20التفعيل:</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22text\x22\x20id=\x22ext-activation-code\x22\x20placeholder=\x22أدخل\x20رمز\x20التفعيل\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22button-row\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22ext-activate-btn\x22\x20class=\x22btn\x20btn-success\x22>تفعيل</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22device-id-display\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20id=\x22device-id-text\x22>جاري\x20تحميل\x20معرف\x20الجهاز...</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<!--\x20Old\x20expiry\x20section\x20-\x20hidden\x20now\x20-->\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22expiry-info\x22\x20class=\x22expiry-section\x22\x20style=\x22display:\x20none;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22expiry-info\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22expiry-label\x22>صلاحية\x20الإضافة\x20حتى:</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22expiry-date\x22\x20class=\x22expiry-date\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20</div>\x0a\x0a\x20\x20\x20\x20\x20\x20<!--\x20Main\x20Controls\x20Panel\x20-->\x0a\x20\x20\x20\x20\x20\x20<div\x20id=\x22main-controls-panel\x22\x20class=\x22main-controls-panel\x22\x20style=\x22display:\x20none;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22input-panel\x20hidden-when-minimized\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22panel-header\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h4>📝\x20تفاصيل\x20الطلب</h4>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22header-buttons\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22ext-save-data\x22\x20class=\x22btn-small\x20btn-success\x22\x20title=\x22حفظ\x20البيانات\x22>💾</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22ext-clear-data\x22\x20class=\x22btn-small\x20btn-secondary\x22\x20title=\x22مسح\x20البيانات\x22>🗑️</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22input-group\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22text\x22\x20id=\x22ext-seller-name\x22\x20maxlength=\x2240\x22\x20placeholder=\x22أدخل\x20اسم\x20البائع\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label\x20for=\x22ext-seller-name\x22>اسم\x20البائع</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22input-group\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22text\x22\x20id=\x22ext-buyer-name\x22\x20maxlength=\x2240\x22\x20placeholder=\x22أدخل\x20اسم\x20المشتري\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label\x20for=\x22ext-buyer-name\x22>اسم\x20المشتري</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22input-group\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22text\x22\x20id=\x22ext-plate-number\x22\x20pattern=\x22[0-9]+\x22\x20placeholder=\x22أدخل\x20رقم\x20اللوحة\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label\x20for=\x22ext-plate-number\x22>رقم\x20اللوحة</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22control-panel\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22panel-header\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h4>⚙️\x20أوامر\x20الإرسال</h4>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22header-buttons\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<!--\x20NEW:\x20Redirect\x20Toggle\x20Button\x20-->\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22checkbox\x22\x20id=\x22ext-redirect-toggle\x22\x20class=\x22redirect-checkbox\x22\x20checked>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label\x20for=\x22ext-redirect-toggle\x22\x20class=\x22redirect-label\x22\x20title=\x22تفعيل/تعطيل\x20إعادة\x20التوجيه\x20بعد\x20الإرسال\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22redirect-icon-enabled\x22>🔄</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22redirect-icon-disabled\x22>⏹️</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<!--\x20Enhanced\x20Sound\x20Toggle\x20Button\x20-->\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22checkbox\x22\x20id=\x22ext-sound-toggle\x22\x20class=\x22sound-checkbox\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label\x20for=\x22ext-sound-toggle\x22\x20class=\x22sound-label\x22\x20title=\x22تفعيل/تعطيل\x20الصوت\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22sound-icon-on\x22>🔊</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22sound-icon-off\x22>🔇</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<!--\x20Monitoring\x20Button\x20-->\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22checkbox\x22\x20id=\x22ext-monitoring-toggle\x22\x20class=\x22monitoring-checkbox\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<label\x20for=\x22ext-monitoring-toggle\x22\x20class=\x22monitoring-label\x22\x20title=\x22تفعيل/تعطيل\x20المراقبة\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22monitoring-icon\x22>👁️</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</label>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22availability-indicator\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22availability-dot\x22\x20id=\x22availability-dot\x22></span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<span\x20class=\x22availability-text\x22\x20id=\x22availability-text\x22>جاري\x20الفحص...</span>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22button-grid\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<!--\x20الصف\x20الأول:\x20إرسال\x20مرة\x20واحدة\x20وتسجيل\x20الطلب\x20جنباً\x20إلى\x20جنب\x20-->\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22button-row\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22ext-submit-once\x22\x20class=\x22btn\x20btn-purple\x22>📤\x20إرسال\x20مرة\x20واحدة</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22ext-trigger-submit\x22\x20class=\x22btn\x20btn-primary\x22>🚀\x20تسجيل\x20واجهة</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22ext-auto-submit\x22\x20class=\x22btn\x20btn-orange\x20toggle-btn\x22>🤖\x20ارسال\x20تلقائي</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<!--\x20الصف\x20الثاني:\x20إرسال\x20متكرر\x20مع\x20الفاصل\x20الزمني\x20-->\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22button-row\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22ext-submit-loop\x22\x20class=\x22btn\x20btn-warning\x20toggle-btn\x20compact-btn\x22>🔁\x20إرسال\x20متكرر\x20(ثانية)</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22interval-container\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22input-group\x20inline\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22number\x22\x20id=\x22ext-interval\x22\x20value=\x225\x22\x20min=\x221\x22\x20max=\x229999\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<!--\x20الصف\x20الثالث:\x20تحديث\x20تلقائي\x20مع\x20الفاصل\x20الزمني\x20-->\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22button-row\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22ext-auto-refresh\x22\x20class=\x22btn\x20btn-teal\x20toggle-btn\x20compact-btn\x22>🔄\x20تحديث\x20تلقائي\x20(ثانية)</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22interval-container\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22input-group\x20inline\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<input\x20type=\x22number\x22\x20id=\x22ext-refresh-interval\x22\x20value=\x225\x22\x20min=\x221\x22\x20max=\x229999\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22response-panel\x20hidden-when-minimized\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22response-header\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<h4>📋\x20الردود</h4>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<button\x20id=\x22ext-clear-logs\x22\x20class=\x22btn-small\x20btn-danger\x22\x20title=\x22مسح\x20السجل\x22>🗑️</button>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20id=\x22ext-response-log\x22></div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20</div>\x0a\x20\x20','appendChild','lastError','تم\x20تفعيل\x20الحقول\x20وجاهز\x20للإدخال','appointment-info','خطأ\x20في\x20حفظ\x20التفعيل','onclick','device-id-text','mouseup','block','tagName','stringify','انتهت\x20صلاحية\x20الرمز\x20في:\x20','Error\x20decoding\x20activation\x20code:','filter','append','Starting\x20dwell\x20timer\x20automation...','top','beforeunload','refresh','Dwell\x20timer\x20automation\x20completed','entries','⏸️\x20تم\x20تعطيل\x20المراقبة','⏹️\x20','ext-minimize-btn','</div>\x0a\x20\x20\x20\x20\x20\x20<div\x20class=\x22ext-toast-message\x22>','تم\x20تفعيل\x20الإرسال\x20التلقائي\x20-\x20جاري\x20المراقبة...','activation-content','grab','hasAttribute','pointerEvents','resetPosition','تم\x20إعادة\x20وضع\x20النافذة\x20إلى\x20الموضع\x20الافتراضي','debounceTimer','.hidden-when-minimized','ext-sound-toggle','className','sellerReadOnly','message','from','تم\x20إيقاف\x20التحديث\x20التلقائي','خطأ','autoSubmitEnabled','جاري\x20إرسال\x20الطلب:\x20البائع:\x20','التسجيل\x20غير\x20متاح\x20الآن','importDepExtensionData','createGain','buyerReadOnly','3136590JJIggc','hasOwnProperty','50px',',\x20المشتري:\x20','reload','innerHeight','btn-active','createOscillator','race','substring','انتهت\x20الصلاحية','\x20ثانية','refreshInterval','ext-toast-container','getComputedStyle','fixed','response-entry\x20sending','no-cache','input[name=\x22started_at\x22]','ext-auto-submit','ext-clear-logs','join','تم\x20تسجيل\x20طلبك\x20بنجاح','تم\x20إيقاف\x20الإرسال\x20التلقائي','.activation-panel\x20h4','title','m41','padStart','disabled','#openDot','grabbing','ext-seller-name','Cannot\x20play\x20sound\x20in\x20this\x20browser','importDepExtensionSoundEnabled','blur','input[name=\x22cf-turnstile-response\x22]','replaceChild','observe','storage','div','classList','contains','warn','language','Field\x20Status:','importdep_expiry_datetime','No\x20redirect\x20after\x203\x20seconds','ext-redirect-toggle','availability-dot\x20stopped','\x20expired','getMonth','include','forEach','log','change','display','removeAttribute','load','timeZone','getItem','push','input[name=\x22_token\x22]','importDepExtensionPosition','value','fillText','m42','النظام\x20غير\x20متاح\x20❌','deviceId','availability-dot\x20unavailable','width','availability-text','action','التسجيل\x20متاح\x20الآن','clientX','category','\x20ثواني','submissionIntervalActive','الرجاء\x20إدخال\x20رمز\x20التفعيل','ext-response-log','مراقبة\x20متوقفة','hmac','main-controls-panel','1426185ObSgqW'];_0x2846=function(){return _0x33d55e;};return _0x2846();}function monitorFieldStatus(){setInterval(()=>{const _0x48f947=_0x286b,_0x1c0c9f=document['getElementById'](_0x48f947(0x1e9)),_0x181d51=document[_0x48f947(0x20f)](_0x48f947(0x17c)),_0x450ea9=document[_0x48f947(0x20f)](_0x48f947(0x1b6)),_0x2ab50e=document[_0x48f947(0x20f)](_0x48f947(0x1d9)),_0x4a549a=document[_0x48f947(0x20f)](_0x48f947(0x1ac)),_0x2c4689={'fieldsetDisabled':_0x1c0c9f?.['disabled'],'sellerDisabled':_0x181d51?.[_0x48f947(0x12f)],'sellerReadOnly':_0x181d51?.[_0x48f947(0x20e)],'buyerDisabled':_0x450ea9?.[_0x48f947(0x12f)],'buyerReadOnly':_0x450ea9?.[_0x48f947(0x20e)],'plateDisabled':_0x2ab50e?.[_0x48f947(0x12f)],'plateReadOnly':_0x2ab50e?.['readOnly'],'submitDisabled':_0x4a549a?.['disabled']};(_0x2c4689['fieldsetDisabled']||_0x2c4689[_0x48f947(0x1ec)]||_0x2c4689[_0x48f947(0x108)]||_0x2c4689[_0x48f947(0x1fb)]||_0x2c4689[_0x48f947(0x112)]||_0x2c4689[_0x48f947(0x1b8)]||_0x2c4689['plateReadOnly'])&&console[_0x48f947(0x148)](_0x48f947(0x13f),_0x2c4689);},0xbb8);}function saveInputData(){const _0x575165=_0x2d86dc;if(!isExtensionActivated){showExtensionToast(_0x575165(0x24c),_0x575165(0x207));return;}const _0x180658=document[_0x575165(0x20f)](_0x575165(0x132))[_0x575165(0x152)],_0x10439f=document[_0x575165(0x20f)]('ext-buyer-name')[_0x575165(0x152)],_0x252eee=document[_0x575165(0x20f)](_0x575165(0x16b))[_0x575165(0x152)],_0x198ad7={'sellerName':_0x180658,'buyerName':_0x10439f,'plateNumber':_0x252eee};localStorage[_0x575165(0x186)](_0x575165(0x110),JSON[_0x575165(0xee)](_0x198ad7)),showExtensionToast(_0x575165(0x22d),_0x575165(0x1be)),fillWebsiteFields(_0x198ad7),setTimeout(()=>{startDwellTimerAutomatically();},0x1f4);}function fillWebsiteFields(_0x47d120){const _0x5d8e2b=_0x2d86dc,_0x5f4f6a=document[_0x5d8e2b(0x20f)](_0x5d8e2b(0x17c)),_0x560d01=document[_0x5d8e2b(0x20f)](_0x5d8e2b(0x1b6)),_0x1d0920=document[_0x5d8e2b(0x20f)](_0x5d8e2b(0x1d9)),_0x5f1a19=document[_0x5d8e2b(0x20f)](_0x5d8e2b(0x1e9));_0x5f1a19&&_0x5f1a19[_0x5d8e2b(0x12f)]&&(_0x5f1a19[_0x5d8e2b(0x12f)]=![]),_0x5f4f6a&&_0x47d120[_0x5d8e2b(0x20b)]&&(_0x5f4f6a[_0x5d8e2b(0x152)]=_0x47d120[_0x5d8e2b(0x20b)],_0x5f4f6a[_0x5d8e2b(0x12f)]=![]),_0x560d01&&_0x47d120['buyerName']&&(_0x560d01['value']=_0x47d120[_0x5d8e2b(0x1e0)],_0x560d01[_0x5d8e2b(0x12f)]=![]),_0x1d0920&&_0x47d120[_0x5d8e2b(0x21b)]&&(_0x1d0920[_0x5d8e2b(0x152)]=_0x47d120[_0x5d8e2b(0x21b)],_0x1d0920[_0x5d8e2b(0x12f)]=![]),[_0x5f4f6a,_0x560d01,_0x1d0920]['forEach'](_0x130e71=>{const _0x421448=_0x5d8e2b;_0x130e71&&_0x130e71[_0x421448(0x100)](_0x421448(0x209))&&_0x130e71[_0x421448(0x14b)](_0x421448(0x209));});}function enableWebsiteFields(){const _0x4d4204=_0x2d86dc,_0x27f103=document['getElementById'](_0x4d4204(0x1e9)),_0x1e6966=document[_0x4d4204(0x20f)](_0x4d4204(0x17c)),_0x56b3cf=document[_0x4d4204(0x20f)]('buyer_name'),_0x5332f0=document[_0x4d4204(0x20f)](_0x4d4204(0x1d9)),_0x12a3df=document[_0x4d4204(0x20f)](_0x4d4204(0x1ac));[_0x27f103,_0x1e6966,_0x56b3cf,_0x5332f0,_0x12a3df]['forEach'](_0x2e6eca=>{const _0x26e4f0=_0x4d4204;_0x2e6eca&&(_0x2e6eca[_0x26e4f0(0x12f)]=![],_0x2e6eca[_0x26e4f0(0x100)](_0x26e4f0(0x209))&&_0x2e6eca[_0x26e4f0(0x14b)]('readonly'),_0x2e6eca[_0x26e4f0(0x100)]('disabled')&&_0x2e6eca[_0x26e4f0(0x14b)](_0x26e4f0(0x12f)),_0x2e6eca[_0x26e4f0(0x18c)][_0x26e4f0(0x101)]=_0x26e4f0(0x192),_0x2e6eca[_0x26e4f0(0x18c)][_0x26e4f0(0xd9)]='1',_0x2e6eca[_0x26e4f0(0x18c)][_0x26e4f0(0x247)]=_0x2e6eca[_0x26e4f0(0xed)]===_0x26e4f0(0x249)?_0x26e4f0(0x1c6):_0x26e4f0(0xdd));});if(_0x12a3df){const _0x45fd2b=_0x12a3df[_0x4d4204(0x17f)](!![]);_0x12a3df[_0x4d4204(0x1aa)][_0x4d4204(0x137)](_0x45fd2b,_0x12a3df);}}function _0x286b(_0x3f416b,_0x537dd3){const _0x2846e5=_0x2846();return _0x286b=function(_0x286b23,_0x4a410d){_0x286b23=_0x286b23-0xd9;let _0x38d2cd=_0x2846e5[_0x286b23];return _0x38d2cd;},_0x286b(_0x3f416b,_0x537dd3);}function forceEnableFieldsContinuously(){setInterval(()=>{const _0x58dc11=_0x286b;enableWebsiteFields();const _0xf14cd7=document[_0x58dc11(0x20f)](_0x58dc11(0x17c));_0xf14cd7&&(_0xf14cd7[_0x58dc11(0x202)](new Event(_0x58dc11(0x1b1),{'bubbles':!![]})),_0xf14cd7[_0x58dc11(0x202)](new Event('blur',{'bubbles':!![]})),_0xf14cd7[_0x58dc11(0x202)](new Event('input',{'bubbles':!![]})));},0x3e8);}function loadSavedData(){const _0xe5707a=_0x2d86dc,_0x3b26c6=localStorage[_0xe5707a(0x14e)]('importDepExtensionData');if(_0x3b26c6)try{const _0x57796a=JSON[_0xe5707a(0x1c4)](_0x3b26c6);_0x57796a['sellerName']&&(document[_0xe5707a(0x20f)](_0xe5707a(0x132))['value']=_0x57796a[_0xe5707a(0x20b)]),_0x57796a[_0xe5707a(0x1e0)]&&(document[_0xe5707a(0x20f)]('ext-buyer-name')[_0xe5707a(0x152)]=_0x57796a[_0xe5707a(0x1e0)]),_0x57796a[_0xe5707a(0x21b)]&&(document[_0xe5707a(0x20f)](_0xe5707a(0x16b))[_0xe5707a(0x152)]=_0x57796a[_0xe5707a(0x21b)]),fillWebsiteFields(_0x57796a);}catch(_0x2911cb){console[_0xe5707a(0x207)](_0xe5707a(0xdf),_0x2911cb);}}function clearInputData(){const _0x464d22=_0x2d86dc;document[_0x464d22(0x20f)](_0x464d22(0x132))['value']='',document[_0x464d22(0x20f)](_0x464d22(0x1e4))['value']='',document['getElementById'](_0x464d22(0x16b))[_0x464d22(0x152)]='',localStorage[_0x464d22(0x235)](_0x464d22(0x110)),showExtensionToast(_0x464d22(0x21c),_0x464d22(0x1be));const _0x2b20ce=document['getElementById']('seller_name'),_0x18c90c=document[_0x464d22(0x20f)](_0x464d22(0x1b6)),_0x377162=document[_0x464d22(0x20f)]('plate_number');if(_0x2b20ce)_0x2b20ce[_0x464d22(0x152)]='';if(_0x18c90c)_0x18c90c['value']='';if(_0x377162)_0x377162['value']='';}function addIntervalChangeListeners(){const _0x294925=_0x2d86dc,_0x763ac5=document[_0x294925(0x20f)](_0x294925(0x224)),_0x175e77=document[_0x294925(0x20f)](_0x294925(0x1d6));_0x763ac5&&(_0x763ac5[_0x294925(0x1f5)](_0x294925(0x149),function(){const _0x39b987=_0x294925,_0x124b61=parseInt(this['value'])||0x5;if(_0x124b61<0x1)this['value']=0x1;if(_0x124b61>0x270f)this[_0x39b987(0x152)]=0x270f;saveButtonStates(),submissionInterval&&(stopSubmissionLoop(),startSubmissionLoop(_0x124b61),showExtensionToast('تم\x20تحديث\x20الفاصل\x20الزمني\x20للإرسال\x20المتكرر\x20إلى\x20'+_0x124b61+_0x39b987(0x15e),_0x39b987(0x17d)));}),_0x763ac5[_0x294925(0x1f5)](_0x294925(0x246),function(){const _0x123bc6=_0x294925;clearTimeout(_0x763ac5[_0x123bc6(0x104)]),_0x763ac5[_0x123bc6(0x104)]=setTimeout(()=>{saveButtonStates();},0x3e8);})),_0x175e77&&(_0x175e77['addEventListener'](_0x294925(0x149),function(){const _0x207b33=_0x294925,_0x4503b2=parseInt(this[_0x207b33(0x152)])||0x12c;if(_0x4503b2<0x1)this['value']=0x1;if(_0x4503b2>0x270f)this[_0x207b33(0x152)]=0x270f;saveButtonStates(),autoRefreshInterval&&(stopAutoRefresh(),startAutoRefresh(_0x4503b2),showExtensionToast(_0x207b33(0x1bf)+_0x4503b2+_0x207b33(0x15e),_0x207b33(0x17d)));}),_0x175e77['addEventListener'](_0x294925(0x246),function(){const _0x4c0a2f=_0x294925;clearTimeout(_0x175e77[_0x4c0a2f(0x104)]),_0x175e77[_0x4c0a2f(0x104)]=setTimeout(()=>{saveButtonStates();},0x3e8);}));}function saveButtonStates(){const _0x14ef23=_0x2d86dc,_0x2ba852={'submissionIntervalActive':!!submissionInterval,'autoRefreshIntervalActive':!!autoRefreshInterval,'autoSubmitEnabled':autoSubmitEnabled,'monitoringEnabled':monitoringEnabled,'redirectEnabled':redirectEnabled,'interval':parseInt(document['getElementById']('ext-interval')[_0x14ef23(0x152)])||0x5,'refreshInterval':parseInt(document['getElementById']('ext-refresh-interval')[_0x14ef23(0x152)])||0x12c};localStorage[_0x14ef23(0x186)](_0x14ef23(0x1ff),JSON[_0x14ef23(0xee)](_0x2ba852));}function loadButtonStates(){const _0x45717f=_0x2d86dc,_0x1eb573=localStorage[_0x45717f(0x14e)](_0x45717f(0x1ff)),_0x132bca=localStorage[_0x45717f(0x14e)](_0x45717f(0x134)),_0x5758ce=localStorage['getItem'](_0x45717f(0x214)),_0x5299b4=localStorage[_0x45717f(0x14e)](_0x45717f(0x1b7));if(_0x132bca!==null){soundEnabled=JSON[_0x45717f(0x1c4)](_0x132bca);const _0x6385f4=document['getElementById'](_0x45717f(0x106));_0x6385f4&&(_0x6385f4['checked']=soundEnabled);}if(_0x5758ce!==null){monitoringEnabled=JSON[_0x45717f(0x1c4)](_0x5758ce);const _0x2ced2c=document[_0x45717f(0x20f)]('ext-monitoring-toggle');_0x2ced2c&&(_0x2ced2c['checked']=monitoringEnabled);}if(_0x5299b4!==null){redirectEnabled=JSON[_0x45717f(0x1c4)](_0x5299b4);const _0x19df6d=document[_0x45717f(0x20f)]('ext-redirect-toggle');_0x19df6d&&(_0x19df6d[_0x45717f(0x1a8)]=redirectEnabled);}if(_0x1eb573)try{const _0x15f7dc=JSON[_0x45717f(0x1c4)](_0x1eb573);_0x15f7dc[_0x45717f(0x193)]&&(document[_0x45717f(0x20f)](_0x45717f(0x224))[_0x45717f(0x152)]=_0x15f7dc[_0x45717f(0x193)]),_0x15f7dc[_0x45717f(0x11f)]&&(document[_0x45717f(0x20f)](_0x45717f(0x1d6))[_0x45717f(0x152)]=_0x15f7dc['refreshInterval']),setTimeout(()=>{const _0x5c225b=_0x45717f;_0x15f7dc[_0x5c225b(0x15f)]&&(document[_0x5c225b(0x20f)](_0x5c225b(0x199))[_0x5c225b(0x13b)][_0x5c225b(0x1ea)]('btn-active'),startSubmissionLoop(_0x15f7dc[_0x5c225b(0x193)]||0x5));_0x15f7dc[_0x5c225b(0x1fa)]&&(document[_0x5c225b(0x20f)](_0x5c225b(0x239))['classList']['add'](_0x5c225b(0x119)),startAutoRefresh(_0x15f7dc[_0x5c225b(0x11f)]||0x12c));_0x15f7dc[_0x5c225b(0x10d)]&&(autoSubmitEnabled=!![],document[_0x5c225b(0x20f)](_0x5c225b(0x126))[_0x5c225b(0x13b)][_0x5c225b(0x1ea)](_0x5c225b(0x119)),startAutoSubmit());if(_0x15f7dc[_0x5c225b(0x1b4)]!==undefined){redirectEnabled=_0x15f7dc[_0x5c225b(0x1b4)];const _0x136cac=document[_0x5c225b(0x20f)](_0x5c225b(0x142));_0x136cac&&(_0x136cac[_0x5c225b(0x1a8)]=redirectEnabled);}monitoringEnabled?setTimeout(()=>{startFormMonitoring();},0x3e8):stopAvailabilityMonitoring();},0x64);}catch(_0x174304){console[_0x45717f(0x207)](_0x45717f(0x248),_0x174304);}}function monitorOriginalToasts(){const _0x3ac956=_0x2d86dc,_0x49faa2=document['getElementById']('toast-root');if(_0x49faa2){const _0x4586dd=new MutationObserver(function(_0x116fdd){_0x116fdd['forEach'](function(_0x4e172f){const _0x311e43=_0x286b;_0x4e172f['type']===_0x311e43(0x234)&&_0x4e172f[_0x311e43(0x206)][_0x311e43(0x147)](function(_0x5a367d){const _0x4b6db4=_0x311e43;if(_0x5a367d[_0x4b6db4(0x1f9)]===0x1){const _0x7b18fe=_0x5a367d;if(_0x7b18fe[_0x4b6db4(0x13b)][_0x4b6db4(0x13c)]('toast')){const _0x555d3c=_0x7b18fe['textContent']['trim']();if(_0x555d3c){const _0x4a47fd=_0x7b18fe[_0x4b6db4(0x13b)]['contains']('toast-error')||_0x555d3c[_0x4b6db4(0x17b)](_0x4b6db4(0x10c))||_0x555d3c[_0x4b6db4(0x17b)]('فشل');showExtensionToast(_0x555d3c,_0x4a47fd?_0x4b6db4(0x207):_0x4b6db4(0x1be));}}}});});});_0x4586dd[_0x3ac956(0x138)](_0x49faa2,{'childList':!![],'subtree':!![]});}const _0x41129e=new MutationObserver(function(_0xc6c8f0){const _0x52d484=_0x3ac956;_0xc6c8f0[_0x52d484(0x147)](function(_0x589202){const _0x43ce3f=_0x52d484;_0x589202['type']==='childList'&&_0x589202['addedNodes'][_0x43ce3f(0x147)](function(_0x9c2f7a){const _0x4a5b1b=_0x43ce3f;if(_0x9c2f7a[_0x4a5b1b(0x1f9)]===0x1&&_0x9c2f7a[_0x4a5b1b(0x13b)][_0x4a5b1b(0x13c)](_0x4a5b1b(0xda))){const _0x460c4b=_0x9c2f7a[_0x4a5b1b(0x1bc)][_0x4a5b1b(0x212)]();_0x460c4b&&showExtensionToast(_0x460c4b,_0x4a5b1b(0x207));}});});});_0x41129e[_0x3ac956(0x138)](document['body'],{'childList':!![],'subtree':!![]});}function showExtensionToast(_0x36253b,_0x37cf65=_0x2d86dc(0x1be),_0xd79261=0x1388){const _0x4a9a50=_0x2d86dc,_0x53b275=document[_0x4a9a50(0x20f)](_0x4a9a50(0x1f7));if(!_0x53b275||!_0x36253b)return;_0x53b275[_0x4a9a50(0x18c)][_0x4a9a50(0xf4)]='20px',_0x53b275[_0x4a9a50(0x18c)][_0x4a9a50(0x19c)]=_0x4a9a50(0x1e3),_0x53b275[_0x4a9a50(0x18c)]['right']=_0x4a9a50(0x192);const _0x46dfa9=document['createElement'](_0x4a9a50(0x13a));_0x46dfa9[_0x4a9a50(0x107)]='ext-toast\x20ext-toast-'+_0x37cf65;const _0x45312a=_0x37cf65===_0x4a9a50(0x1be)?'✅':_0x37cf65===_0x4a9a50(0x207)?'❌':'ℹ️';_0x46dfa9[_0x4a9a50(0x1e8)]='\x0a\x20\x20\x20\x20<div\x20class=\x22ext-toast-content\x22>\x0a\x20\x20\x20\x20\x20\x20<div\x20class=\x22ext-toast-icon\x22>'+_0x45312a+_0x4a9a50(0xfc)+_0x36253b+'</div>\x0a\x20\x20\x20\x20\x20\x20<button\x20class=\x22ext-toast-close\x22>×</button>\x0a\x20\x20\x20\x20</div>\x0a\x20\x20',_0x53b275[_0x4a9a50(0xe4)](_0x46dfa9);const _0x1e5671=_0x46dfa9[_0x4a9a50(0x210)]('.ext-toast-close');_0x1e5671[_0x4a9a50(0x1f5)]('click',()=>{const _0x3d2f7c=_0x4a9a50;_0x46dfa9[_0x3d2f7c(0x230)]();}),_0xd79261&&setTimeout(()=>{_0x46dfa9['parentNode']&&_0x46dfa9['remove']();},_0xd79261),logResponse(_0x45312a+'\x20'+_0x36253b,_0x37cf65);}function saveLogs(){const _0x2144db=_0x2d86dc,_0x2deb64=document[_0x2144db(0x20f)]('ext-response-log');if(_0x2deb64){const _0x175b10=Array[_0x2144db(0x10a)](_0x2deb64[_0x2144db(0x19b)])[_0x2144db(0x185)](_0x5abdb9=>({'text':_0x5abdb9[_0x2144db(0x1bc)],'className':_0x5abdb9[_0x2144db(0x107)]}));localStorage[_0x2144db(0x186)]('importDepExtensionLogs',JSON['stringify'](_0x175b10));}}function loadLogs(){const _0x5d49c8=_0x2d86dc,_0xe35a75=localStorage[_0x5d49c8(0x14e)](_0x5d49c8(0x222)),_0x4e91e7=document['getElementById']('ext-response-log');if(_0xe35a75&&_0x4e91e7)try{const _0x4be42b=JSON[_0x5d49c8(0x1c4)](_0xe35a75);_0x4e91e7[_0x5d49c8(0x1e8)]='',_0x4be42b[_0x5d49c8(0x147)](_0x5bc374=>{const _0xe13c8b=_0x5d49c8,_0x14430e=document[_0xe13c8b(0x1a7)](_0xe13c8b(0x13a));_0x14430e['className']=_0x5bc374[_0xe13c8b(0x107)]||_0xe13c8b(0x243),_0x14430e[_0xe13c8b(0x1bc)]=_0x5bc374['text'],_0x4e91e7[_0xe13c8b(0xe4)](_0x14430e);}),_0x4e91e7[_0x5d49c8(0x168)]=_0x4e91e7[_0x5d49c8(0x19f)];}catch(_0xd6361b){console[_0x5d49c8(0x207)]('Error\x20loading\x20logs:',_0xd6361b);}}function clearLogs(){const _0xdf8827=_0x2d86dc,_0x332b7a=document[_0xdf8827(0x20f)](_0xdf8827(0x161));_0x332b7a&&(_0x332b7a[_0xdf8827(0x1e8)]='',localStorage['removeItem'](_0xdf8827(0x222)),showExtensionToast('تم\x20مسح\x20سجل\x20الردود',_0xdf8827(0x1be)));}function logResponse(_0x3c7680,_0x4089de=_0x2d86dc(0x17d)){const _0x147db7=_0x2d86dc,_0x3111c8=document[_0x147db7(0x20f)](_0x147db7(0x161)),_0x9e0a17=document[_0x147db7(0x1a7)](_0x147db7(0x13a));if(_0x4089de==='success')_0x9e0a17[_0x147db7(0x107)]='response-entry\x20success';else{if(_0x4089de==='error')_0x9e0a17[_0x147db7(0x107)]='response-entry\x20error';else _0x4089de==='sending'?_0x9e0a17[_0x147db7(0x107)]=_0x147db7(0x123):_0x9e0a17['className']=_0x147db7(0x243);}_0x9e0a17['textContent']='['+new Date()[_0x147db7(0x181)]()+']\x20'+_0x3c7680,_0x3111c8[_0x147db7(0xe4)](_0x9e0a17),_0x3111c8['scrollTop']=_0x3111c8[_0x147db7(0x19f)],saveLogs();}function startAvailabilityMonitoring(){if(!monitoringEnabled){updateAvailabilityUI(![],'مراقبة\x20متوقفة');return;}checkAvailabilityViaDOM(),availabilityCheckInterval=setInterval(()=>{checkAvailabilityViaDOM();},DOM_CHECK_INTERVAL);}function isRegistrationPage(){const _0x4a69bc=_0x2d86dc,_0x15f1d2=document[_0x4a69bc(0x20f)](_0x4a69bc(0x1f4)),_0x13e619=document['getElementById']('seller_name'),_0x69331e=document[_0x4a69bc(0x210)]('#openText,\x20#openDot'),_0x3f504b=document[_0x4a69bc(0x210)](_0x4a69bc(0xe2));return _0x15f1d2&&_0x13e619&&_0x69331e&&!_0x3f504b;}function checkAvailabilityViaDOM(){const _0x3fe6f9=_0x2d86dc;if(!isRegistrationPage()){updateAvailabilityUI(![],'صفحة\x20غير\x20صالحة\x20للفحص');return;}const _0x4be29d=document[_0x3fe6f9(0x210)]('#openText'),_0x1d514f=document[_0x3fe6f9(0x210)](_0x3fe6f9(0x130));let _0x4955fa=![],_0x1f9a85=_0x3fe6f9(0x22e);if(_0x4be29d&&_0x4be29d[_0x3fe6f9(0x1bc)]){if(_0x4be29d[_0x3fe6f9(0x1bc)]['includes'](_0x3fe6f9(0x15b)))_0x4955fa=!![],_0x1f9a85=_0x3fe6f9(0x1d1);else _0x4be29d[_0x3fe6f9(0x1bc)][_0x3fe6f9(0x17b)](_0x3fe6f9(0x10f))&&(_0x4955fa=![],_0x1f9a85='النظام\x20غير\x20متاح\x20❌');}if(_0x1d514f){if(_0x1d514f[_0x3fe6f9(0x13b)][_0x3fe6f9(0x13c)](_0x3fe6f9(0x1cc)))_0x4955fa=!![],_0x1f9a85=_0x3fe6f9(0x1d1);else _0x1d514f[_0x3fe6f9(0x13b)][_0x3fe6f9(0x13c)](_0x3fe6f9(0x18d))&&(_0x4955fa=![],_0x1f9a85=_0x3fe6f9(0x155));}handleAvailabilityChange(_0x4955fa,_0x1f9a85);}function handleAvailabilityChange(_0x3ab4ad,_0x33b580){const _0x1289cf=_0x2d86dc,_0x1a6591=isSystemAvailable;isSystemAvailable=_0x3ab4ad,updateAvailabilityUI(_0x3ab4ad,_0x33b580),_0x3ab4ad&&soundEnabled&&!_0x1a6591&&playAvailabilitySound(),_0x3ab4ad&&autoRefreshInterval&&(stopAutoRefresh(),document[_0x1289cf(0x20f)](_0x1289cf(0x239))[_0x1289cf(0x13b)]['remove'](_0x1289cf(0x119)),showExtensionToast('تم\x20إيقاف\x20التحديث\x20التلقائي\x20-\x20النظام\x20أصبح\x20متاحاً',_0x1289cf(0x1be)),saveButtonStates()),_0x3ab4ad&&autoSubmitEnabled&&!_0x1a6591&&(showExtensionToast(_0x1289cf(0x1e2),_0x1289cf(0x1be)),submitOrder());}function updateAvailabilityUI(_0x4e6661,_0x5b666a){const _0x21a1c1=_0x2d86dc,_0xc3662a=document[_0x21a1c1(0x20f)](_0x21a1c1(0x195)),_0x1f773e=document[_0x21a1c1(0x20f)](_0x21a1c1(0x159));if(_0xc3662a&&_0x1f773e){if(_0x5b666a===_0x21a1c1(0x162))_0xc3662a[_0x21a1c1(0x107)]=_0x21a1c1(0x143),_0x1f773e['textContent']=_0x5b666a,_0x1f773e[_0x21a1c1(0x107)]=_0x21a1c1(0x1c1);else _0x4e6661?(_0xc3662a['className']=_0x21a1c1(0x232),_0x1f773e[_0x21a1c1(0x1bc)]=_0x5b666a,_0x1f773e[_0x21a1c1(0x107)]=_0x21a1c1(0x227)):(_0xc3662a['className']=_0x21a1c1(0x157),_0x1f773e[_0x21a1c1(0x1bc)]=_0x5b666a,_0x1f773e[_0x21a1c1(0x107)]=_0x21a1c1(0x23c));}}function playAvailabilitySound(){const _0x53b954=_0x2d86dc;try{const _0x1804c2=new(window[(_0x53b954(0x19d))]||window[(_0x53b954(0x1ef))])(),_0x2ef6fe=_0x1804c2[_0x53b954(0x11a)](),_0x4fb56a=_0x1804c2[_0x53b954(0x111)]();_0x2ef6fe[_0x53b954(0x1a2)]=_0x53b954(0x1d7),_0x2ef6fe[_0x53b954(0x1eb)]['setValueAtTime'](0x320,_0x1804c2[_0x53b954(0x245)]),_0x2ef6fe['frequency'][_0x53b954(0x1e1)](0x258,_0x1804c2[_0x53b954(0x245)]+0.1),_0x2ef6fe[_0x53b954(0x1eb)][_0x53b954(0x1e1)](0x320,_0x1804c2[_0x53b954(0x245)]+0.2),_0x4fb56a['gain'][_0x53b954(0x1e1)](0.3,_0x1804c2[_0x53b954(0x245)]),_0x4fb56a[_0x53b954(0x1de)]['exponentialRampToValueAtTime'](0.01,_0x1804c2['currentTime']+0.5),_0x2ef6fe[_0x53b954(0x1fc)](_0x4fb56a),_0x4fb56a[_0x53b954(0x1fc)](_0x1804c2[_0x53b954(0x19a)]),_0x2ef6fe[_0x53b954(0x19e)](),_0x2ef6fe[_0x53b954(0x1b5)](_0x1804c2['currentTime']+0.5);}catch(_0x3ac243){console[_0x53b954(0x148)](_0x53b954(0x133));}}async function submitOrder(){const _0x41f687=_0x2d86dc;if(!isExtensionActivated){const _0x2990b4=await checkActivation();if(!_0x2990b4)return showExtensionToast(_0x41f687(0x24c),_0x41f687(0x207)),null;else isExtensionActivated=!![];}const _0x3f17df=document[_0x41f687(0x20f)](_0x41f687(0x132))['value'],_0x34ac02=document[_0x41f687(0x20f)](_0x41f687(0x1e4))[_0x41f687(0x152)],_0x151cfc=document[_0x41f687(0x20f)](_0x41f687(0x16b))[_0x41f687(0x152)];if(!_0x3f17df||!_0x34ac02||!_0x151cfc)return showExtensionToast(_0x41f687(0x215),_0x41f687(0x207)),null;let _0x251ddd=document[_0x41f687(0x210)](_0x41f687(0x136))?.[_0x41f687(0x152)];!_0x251ddd&&(_0x251ddd=document['querySelector'](_0x41f687(0x1ae))?.[_0x41f687(0x152)]);if(!_0x251ddd)return showExtensionToast(_0x41f687(0x24d),_0x41f687(0x207)),null;logResponse(_0x41f687(0x10e)+_0x3f17df+_0x41f687(0x116)+_0x34ac02+_0x41f687(0x1f1)+_0x151cfc,'sending');const _0x5c9b5d=document[_0x41f687(0x20f)](_0x41f687(0x1f4));if(!_0x5c9b5d)return showExtensionToast(_0x41f687(0x1c8),_0x41f687(0x207)),null;const _0x5658ea=new FormData(),_0x5c3f5b={'_token':document[_0x41f687(0x210)](_0x41f687(0x150))?.[_0x41f687(0x152)],'started_at':document[_0x41f687(0x210)](_0x41f687(0x125))?.['value'],'hmac':document[_0x41f687(0x210)](_0x41f687(0x1c3))?.[_0x41f687(0x152)],'seller_name':_0x3f17df,'buyer_name':_0x34ac02,'plate_number':_0x151cfc,'cf-turnstile-response':_0x251ddd};for(const [_0x578385,_0x58ba06]of Object[_0x41f687(0xf8)](_0x5c3f5b)){if(_0x58ba06)_0x5658ea[_0x41f687(0xf2)](_0x578385,_0x58ba06);else _0x578385!=='hmac'&&console[_0x41f687(0x13d)]('Missing\x20essential\x20field:\x20'+_0x578385);}const _0x19fbd2=_0x5c9b5d[_0x41f687(0x22b)]('input,\x20select,\x20textarea');let _0x50e1ac=[];_0x19fbd2[_0x41f687(0x147)](_0x4ffff0=>{const _0x53b5b1=_0x41f687,_0xf18a58=_0x4ffff0[_0x53b5b1(0x242)],_0x1c6979=_0x4ffff0[_0x53b5b1(0x152)];if(!_0xf18a58||_0x4ffff0['disabled']||_0x5c3f5b[_0x53b5b1(0x114)](_0xf18a58))return;_0x5658ea[_0x53b5b1(0xf2)](_0xf18a58,_0x1c6979),_0x50e1ac['push'](_0xf18a58);});_0x50e1ac[_0x41f687(0x172)]>0x0&&(console['log'](_0x41f687(0x223),_0x50e1ac),logResponse(_0x41f687(0x182)+_0x50e1ac['length']+'\x20حقل\x20تلقائيًا','info'));console[_0x41f687(0x148)](_0x41f687(0x1a3));for(let [_0xc5f6a4,_0x22c201]of _0x5658ea[_0x41f687(0xf8)]()){console[_0x41f687(0x148)](_0xc5f6a4+':\x20'+_0x22c201);}try{const _0x469c5c=fetch(_0x41f687(0x22c),{'method':_0x41f687(0x183),'body':_0x5658ea,'credentials':_0x41f687(0x146),'headers':{'Accept':_0x41f687(0x18f),'Cache-Control':_0x41f687(0x124)}}),_0x5c01a1=new Promise(_0x1bc86e=>{setTimeout(()=>{const _0x242cf7=_0x286b;redirectEnabled?(showExtensionToast(_0x242cf7(0x1df),_0x242cf7(0x17d)),redirectToRegistration(),_0x1bc86e({'timedOut':!![]})):(showExtensionToast(_0x242cf7(0x23b),_0x242cf7(0x17d)),_0x1bc86e({'timedOut':![],'noRedirect':!![]}));},0xbb8);}),_0xcb18f4=await Promise[_0x41f687(0x11b)]([_0x469c5c,_0x5c01a1]);if(_0xcb18f4['timedOut']||_0xcb18f4[_0x41f687(0x1b9)])return{'status':_0xcb18f4[_0x41f687(0xe1)]?'timeout':'no-redirect','text':_0xcb18f4[_0x41f687(0xe1)]?_0x41f687(0x231):_0x41f687(0x141)};const _0xaf8ab9=_0xcb18f4,_0x2a544d=await _0xaf8ab9[_0x41f687(0xdd)]();if(_0x2a544d[_0x41f687(0x17b)](_0x41f687(0x203)))return showExtensionToast(_0x41f687(0x1b3),_0x41f687(0x207)),{'status':_0xaf8ab9[_0x41f687(0x16f)],'text':_0x2a544d};return parseResponseMessages(_0x2a544d,_0xaf8ab9[_0x41f687(0x16f)]),{'status':_0xaf8ab9[_0x41f687(0x16f)],'text':_0x2a544d};}catch(_0x4d7a2b){return showExtensionToast(_0x41f687(0x228)+_0x4d7a2b[_0x41f687(0x109)],_0x41f687(0x207)),null;}}function stopAllMonitoring(){const _0x4cfd9a=_0x2d86dc;availabilityCheckInterval&&(clearInterval(availabilityCheckInterval),availabilityCheckInterval=null);formMonitoringInterval&&(clearInterval(formMonitoringInterval),formMonitoringInterval=null);autoSubmitCheckInterval&&(clearInterval(autoSubmitCheckInterval),autoSubmitCheckInterval=null);submissionInterval&&(clearInterval(submissionInterval),submissionInterval=null);autoRefreshInterval&&(clearInterval(autoRefreshInterval),autoRefreshInterval=null);autoSubmitEnabled=![],activeMode=null;const _0x518f45=document['getElementById']('ext-auto-submit');_0x518f45&&_0x518f45[_0x4cfd9a(0x13b)][_0x4cfd9a(0x230)]('btn-active');const _0x241c78=document['getElementById'](_0x4cfd9a(0x199));_0x241c78&&_0x241c78[_0x4cfd9a(0x13b)][_0x4cfd9a(0x230)](_0x4cfd9a(0x119));const _0x13f8fa=document[_0x4cfd9a(0x20f)](_0x4cfd9a(0x239));_0x13f8fa&&_0x13f8fa[_0x4cfd9a(0x13b)]['remove'](_0x4cfd9a(0x119));saveButtonStates();const _0x1d5139=_0x4cfd9a(0x236);showExtensionToast(_0x1d5139,_0x4cfd9a(0x1be)),logResponse(_0x4cfd9a(0xfa)+_0x1d5139,_0x4cfd9a(0x1be));}function parseResponseMessages(_0x4bcd8b,_0x40c45f){const _0x32ce12=_0x2d86dc,_0x335d2f=new DOMParser(),_0x21abb6=_0x335d2f[_0x32ce12(0x1ba)](_0x4bcd8b,_0x32ce12(0x1da));if(_0x4bcd8b[_0x32ce12(0x17b)]('فشل\x20التحقق\x20من\x20سلامة\x20النموذج')){showExtensionToast(_0x32ce12(0x1b3),'error'),setTimeout(()=>redirectToRegistration(),0x7d0);return;}let _0x836de3=![];const _0x48c2bf=_0x21abb6[_0x32ce12(0x22b)](_0x32ce12(0x169));_0x48c2bf[_0x32ce12(0x172)]>0x0&&(_0x836de3=!![],_0x48c2bf['forEach'](_0x1b874a=>{const _0x56cb68=_0x32ce12,_0x540e75=_0x1b874a['textContent']['trim']();_0x540e75&&(showExtensionToast(_0x540e75,_0x56cb68(0x207)),logResponse('❌\x20'+_0x540e75,_0x56cb68(0x207)));}));const _0x3629ba=_0x21abb6[_0x32ce12(0x20f)](_0x32ce12(0x1bb));if(_0x3629ba){const _0x6f8e90=_0x3629ba[_0x32ce12(0x1d4)](_0x32ce12(0x174));_0x6f8e90&&(_0x836de3=!![],showExtensionToast(_0x6f8e90,_0x32ce12(0x207)),logResponse('❌\x20'+_0x6f8e90,_0x32ce12(0x207)));}if(_0x40c45f===0x1a3||_0x40c45f===0x1ad||_0x40c45f===0x193){_0x836de3=!![];const _0x39fee7=_0x40c45f===0x1a3||_0x40c45f===0x1ad?'انتهت\x20صلاحية\x20الجلسة،\x20جاري\x20تحديث\x20الصفحة...':_0x32ce12(0x18e);showExtensionToast(_0x39fee7,_0x32ce12(0x207)),logResponse('❌\x20'+_0x39fee7,_0x32ce12(0x207)),setTimeout(()=>redirectToRegistration(),0x7d0);}if(!_0x836de3){if(_0x4bcd8b[_0x32ce12(0x17b)](_0x32ce12(0x129))){const _0x15908c=_0x32ce12(0x1d0);showExtensionToast(_0x15908c,_0x32ce12(0x1be)),logResponse('✅\x20'+_0x15908c,_0x32ce12(0x1be)),stopAllMonitoring();return;}const _0x4d2ae9=_0x21abb6['getElementById']('success-notice-modal');if(_0x4d2ae9&&_0x4d2ae9[_0x32ce12(0x18c)][_0x32ce12(0x14a)]!==_0x32ce12(0x229)&&!_0x4d2ae9[_0x32ce12(0x13b)][_0x32ce12(0x13c)](_0x32ce12(0x20d))){const _0x2086ee='تم\x20حجز\x20الموعد\x20بنجاح!';showExtensionToast(_0x2086ee,_0x32ce12(0x1be)),logResponse('✅\x20'+_0x2086ee,_0x32ce12(0x1be));const _0x3c99aa=_0x21abb6[_0x32ce12(0x20f)](_0x32ce12(0xe7));if(_0x3c99aa){const _0x5d1947=_0x32ce12(0x179)+_0x3c99aa[_0x32ce12(0x1bc)];showExtensionToast(_0x5d1947,_0x32ce12(0x1be)),logResponse('📅\x20'+_0x5d1947,_0x32ce12(0x1be));}stopAllMonitoring();return;}if(_0x3629ba){const _0x18a509=_0x3629ba['getAttribute']('data-success');if(_0x18a509){showExtensionToast(_0x18a509,_0x32ce12(0x1be)),logResponse('✅\x20'+_0x18a509,_0x32ce12(0x1be)),stopAllMonitoring();return;}}}!_0x836de3&&_0x40c45f===0xc8&&showExtensionToast(_0x32ce12(0x194),_0x32ce12(0x17d));}function submitOnce(){submitOrder();}function triggerSiteSubmission(){const _0x34b4f6=_0x2d86dc;if(!isExtensionActivated){showExtensionToast(_0x34b4f6(0x24c),'error');return;}const _0x2d1279=document[_0x34b4f6(0x20f)](_0x34b4f6(0x1e9)),_0x4af50a=document[_0x34b4f6(0x20f)](_0x34b4f6(0x17c)),_0x8997f=document[_0x34b4f6(0x20f)](_0x34b4f6(0x1b6)),_0x391ac8=document[_0x34b4f6(0x20f)](_0x34b4f6(0x1d9)),_0x5bbb8c=document[_0x34b4f6(0x20f)](_0x34b4f6(0x1ac));if(_0x2d1279)_0x2d1279[_0x34b4f6(0x12f)]=![];if(_0x4af50a)_0x4af50a[_0x34b4f6(0x12f)]=![];if(_0x8997f)_0x8997f[_0x34b4f6(0x12f)]=![];if(_0x391ac8)_0x391ac8[_0x34b4f6(0x12f)]=![];if(_0x5bbb8c)_0x5bbb8c[_0x34b4f6(0x12f)]=![];if(_0x4af50a)_0x4af50a[_0x34b4f6(0x20e)]=![];if(_0x8997f)_0x8997f[_0x34b4f6(0x20e)]=![];if(_0x391ac8)_0x391ac8['readOnly']=![];const _0x6ce05c=[_0x4af50a,_0x8997f,_0x391ac8,_0x5bbb8c];_0x6ce05c['forEach'](_0x3bcd5b=>{const _0x3f264b=_0x34b4f6;_0x3bcd5b&&(_0x3bcd5b[_0x3f264b(0x18c)][_0x3f264b(0x101)]=_0x3f264b(0x192),_0x3bcd5b['style']['opacity']='1',_0x3bcd5b[_0x3f264b(0x18c)][_0x3f264b(0x247)]='pointer');});if(_0x5bbb8c){const _0x205108=_0x5bbb8c['cloneNode'](!![]);_0x5bbb8c[_0x34b4f6(0x1aa)][_0x34b4f6(0x137)](_0x205108,_0x5bbb8c),setTimeout(()=>{_0x205108['click']();},0x64);}showExtensionToast('تم\x20تفعيل\x20زر\x20التسجيل\x20قسرياً\x20وجاري\x20الإرسال',_0x34b4f6(0x1be));}function toggleSubmissionLoop(){const _0x28778e=_0x2d86dc,_0x45a9cd=document[_0x28778e(0x20f)](_0x28778e(0x199)),_0x57531b=parseInt(document['getElementById']('ext-interval')[_0x28778e(0x152)])||0x5;activeMode===_0x28778e(0x16d)?(stopSubmissionLoop(),activeMode=null,_0x45a9cd[_0x28778e(0x13b)][_0x28778e(0x230)](_0x28778e(0x119)),showExtensionToast(_0x28778e(0x238),_0x28778e(0x17d))):(deactivateAllModes(_0x28778e(0x16d)),activeMode=_0x28778e(0x16d),_0x45a9cd['classList'][_0x28778e(0x1ea)](_0x28778e(0x119)),startSubmissionLoop(_0x57531b)),saveButtonStates();}function toggleAutoRefresh(){const _0x23cf8a=_0x2d86dc,_0x758f7e=document[_0x23cf8a(0x20f)](_0x23cf8a(0x239)),_0x1821c4=parseInt(document[_0x23cf8a(0x20f)]('ext-refresh-interval')['value'])||0x12c;autoRefreshInterval?(stopAutoRefresh(),_0x758f7e[_0x23cf8a(0x13b)][_0x23cf8a(0x230)](_0x23cf8a(0x119)),showExtensionToast(_0x23cf8a(0x10b),_0x23cf8a(0x17d))):(_0x758f7e[_0x23cf8a(0x13b)][_0x23cf8a(0x1ea)](_0x23cf8a(0x119)),startAutoRefresh(_0x1821c4),showExtensionToast(_0x23cf8a(0x1f8)+_0x1821c4+_0x23cf8a(0x11e),_0x23cf8a(0x1be))),saveButtonStates();}function toggleAutoSubmit(){const _0x2bd205=_0x2d86dc;if(!isExtensionActivated){showExtensionToast(_0x2bd205(0x24c),'error');return;}const _0x2e2518=document[_0x2bd205(0x20f)](_0x2bd205(0x126));autoSubmitCheckInterval?(stopAutoSubmit(),autoSubmitEnabled=![],_0x2e2518[_0x2bd205(0x13b)][_0x2bd205(0x230)]('btn-active'),showExtensionToast(_0x2bd205(0x12a),_0x2bd205(0x17d))):(autoSubmitEnabled=!![],_0x2e2518['classList'][_0x2bd205(0x1ea)](_0x2bd205(0x119)),startAutoSubmit(),showExtensionToast(_0x2bd205(0xfd),_0x2bd205(0x1be))),saveButtonStates();}function deactivateAllModes(_0x3f9415){const _0x3e2f99=_0x2d86dc;if(_0x3f9415===_0x3e2f99(0xf6))autoSubmitEnabled&&(stopAutoSubmit(),autoSubmitEnabled=![],document[_0x3e2f99(0x20f)](_0x3e2f99(0x126))[_0x3e2f99(0x13b)][_0x3e2f99(0x230)](_0x3e2f99(0x119)));else{if(_0x3f9415===_0x3e2f99(0x16d))return;else _0x3f9415===_0x3e2f99(0x1cd)&&(activeMode===_0x3e2f99(0xf6)&&(stopAutoRefresh(),document['getElementById'](_0x3e2f99(0x239))[_0x3e2f99(0x13b)][_0x3e2f99(0x230)]('btn-active'),activeMode=null));}}function startSubmissionLoop(_0x2401ae){const _0x1b44b4=_0x2d86dc,_0x4e8984=_0x2401ae*0x3e8;submissionInterval&&clearInterval(submissionInterval),submissionInterval=setInterval(()=>{submitOrder();},_0x4e8984),showExtensionToast(_0x1b44b4(0x24f)+_0x2401ae+_0x1b44b4(0x15e),'success');}function stopSubmissionLoop(){submissionInterval&&(clearInterval(submissionInterval),submissionInterval=null);}function startAutoRefresh(_0x2f6562){const _0xb83d49=_0x2f6562*0x3e8;autoRefreshInterval&&clearInterval(autoRefreshInterval),autoRefreshInterval=setInterval(()=>{const _0x1a9ab3=_0x286b;redirectEnabled?(showExtensionToast(_0x1a9ab3(0x1c2),'info'),setTimeout(()=>{const _0x32acc7=_0x1a9ab3;redirectToRegistration(),window[_0x32acc7(0x1f5)](_0x32acc7(0x14c),()=>{setTimeout(()=>{startDwellTimerAutomatically();},0xbb8);});},0x7d0)):showExtensionToast(_0x1a9ab3(0x201),_0x1a9ab3(0x17d));},_0xb83d49);}function stopAutoRefresh(){autoRefreshInterval&&(clearInterval(autoRefreshInterval),autoRefreshInterval=null);}function startAutoSubmit(){autoSubmitCheckInterval=setInterval(checkAndSubmitIfAvailable,0x1388),checkAndSubmitIfAvailable();}function stopAutoSubmit(){autoSubmitCheckInterval&&(clearInterval(autoSubmitCheckInterval),autoSubmitCheckInterval=null);}function checkAndSubmitIfAvailable(){const _0x2595be=_0x2d86dc;if(!autoSubmitEnabled)return;if(isSystemAvailable){const _0x4b2346=document[_0x2595be(0x20f)](_0x2595be(0x132))[_0x2595be(0x152)],_0x564da1=document['getElementById']('ext-buyer-name')['value'],_0x2fa960=document[_0x2595be(0x20f)]('ext-plate-number')[_0x2595be(0x152)];_0x4b2346&&_0x564da1&&_0x2fa960?(fillWebsiteFields({'sellerName':_0x4b2346,'buyerName':_0x564da1,'plateNumber':_0x2fa960}),setTimeout(()=>{const _0x4f01ba=_0x2595be;showExtensionToast(_0x4f01ba(0x1e2),_0x4f01ba(0x1be)),submitOrder();},0x1f4)):showExtensionToast('النظام\x20متاح\x20ولكن\x20البيانات\x20غير\x20مكتملة',_0x2595be(0x207));}}function startFormMonitoring(){if(!monitoringEnabled)return;setTimeout(()=>{const _0x4fa58c=_0x286b;analyzeFormStructure();const _0x184600=detectFormFields(),_0x409ec7=_0x184600[_0x4fa58c(0xf1)](_0xfb246a=>_0xfb246a['category']==='honeypot');},0x7d0),monitorFormChanges(),formMonitoringInterval&&clearInterval(formMonitoringInterval),formMonitoringInterval=setInterval(()=>{const _0x4be9d5=_0x286b;if(!monitoringEnabled)return;const _0x439784=detectFormFields(),_0x3ba3b9=_0x439784[_0x4be9d5(0xf1)](_0x25b066=>_0x25b066[_0x4be9d5(0x15d)]===_0x4be9d5(0x218))[_0x4be9d5(0x172)];},0x7530);}function stopFormMonitoring(){formMonitoringInterval&&(clearInterval(formMonitoringInterval),formMonitoringInterval=null);}function monitorFormChanges(){const _0x42c51a=_0x2d86dc,_0x4d7293=document[_0x42c51a(0x20f)](_0x42c51a(0x1f4));if(!_0x4d7293)return;let _0x51e4d6=_0x4d7293[_0x42c51a(0x22b)](_0x42c51a(0x244))[_0x42c51a(0x172)];const _0x3853c7=new MutationObserver(_0x57d8d3=>{const _0x189ac6=_0x42c51a;_0x57d8d3[_0x189ac6(0x147)](_0x260f3f=>{const _0x1a9a04=_0x189ac6;if(_0x260f3f['type']===_0x1a9a04(0x234)){const _0xd84c1a=_0x4d7293[_0x1a9a04(0x22b)](_0x1a9a04(0x244))[_0x1a9a04(0x172)];_0xd84c1a!==_0x51e4d6&&monitoringEnabled&&(showExtensionToast(_0x1a9a04(0x208)+_0xd84c1a+'\x20حقول',_0x1a9a04(0x17d)),_0x51e4d6=_0xd84c1a);}});});_0x3853c7[_0x42c51a(0x138)](_0x4d7293,{'childList':!![],'subtree':!![]});}function analyzeFormStructure(){const _0x1dceb0=_0x2d86dc,_0x3ffe05=document['getElementById'](_0x1dceb0(0x1f4));if(!_0x3ffe05)return null;const _0xb3d081=Array[_0x1dceb0(0x10a)](_0x3ffe05[_0x1dceb0(0x22b)](_0x1dceb0(0x244))),_0x59d181=_0xb3d081[_0x1dceb0(0x185)](_0xd252d8=>({'name':_0xd252d8['name'],'type':_0xd252d8[_0x1dceb0(0x1a2)],'tagName':_0xd252d8[_0x1dceb0(0xed)],'value':_0xd252d8['value'],'hidden':_0xd252d8[_0x1dceb0(0x1a2)]===_0x1dceb0(0x20d),'disabled':_0xd252d8['disabled'],'attributes':Array['from'](_0xd252d8[_0x1dceb0(0xdb)])['map'](_0x36a5a6=>({'name':_0x36a5a6[_0x1dceb0(0x242)],'value':_0x36a5a6['value']}))}));return _0x59d181;}function detectFormFields(){const _0x59ece9=_0x2d86dc,_0x180fb9=document[_0x59ece9(0x20f)](_0x59ece9(0x1f4));if(!_0x180fb9)return[];const _0x1356e3=Array[_0x59ece9(0x10a)](_0x180fb9[_0x59ece9(0x22b)](_0x59ece9(0x244))),_0x43d7b0=[];return _0x1356e3['forEach'](_0x1a1d7a=>{const _0x24c524=_0x59ece9;if(!_0x1a1d7a[_0x24c524(0x242)])return;const _0x4a0435={'name':_0x1a1d7a[_0x24c524(0x242)],'value':_0x1a1d7a[_0x24c524(0x152)],'type':_0x1a1d7a[_0x24c524(0x1a2)],'tagName':_0x1a1d7a[_0x24c524(0xed)]};if(_0x1a1d7a[_0x24c524(0x242)]['includes']('hp')||_0x1a1d7a['name'][_0x24c524(0x17b)](_0x24c524(0x218))||_0x1a1d7a[_0x24c524(0x242)]==='website'||_0x1a1d7a[_0x24c524(0x242)]===_0x24c524(0x1e7)||_0x1a1d7a[_0x24c524(0x242)]==='topic')_0x4a0435[_0x24c524(0x15d)]=_0x24c524(0x218);else{if(_0x1a1d7a['name']==='_token'||_0x1a1d7a[_0x24c524(0x242)]===_0x24c524(0x1c0)||_0x1a1d7a[_0x24c524(0x242)]===_0x24c524(0x163))_0x4a0435['category']='security';else{if(_0x1a1d7a[_0x24c524(0x242)]===_0x24c524(0x17c)||_0x1a1d7a['name']===_0x24c524(0x1b6)||_0x1a1d7a['name']===_0x24c524(0x1d9))_0x4a0435[_0x24c524(0x15d)]=_0x24c524(0x178);else _0x1a1d7a[_0x24c524(0x242)]['includes'](_0x24c524(0x175))||_0x1a1d7a['name']['includes'](_0x24c524(0x1dd))?_0x4a0435[_0x24c524(0x15d)]=_0x24c524(0x16e):_0x4a0435[_0x24c524(0x15d)]=_0x24c524(0x1bd);}}_0x43d7b0[_0x24c524(0x14f)](_0x4a0435);}),_0x43d7b0;}window['addEventListener'](_0x2d86dc(0xf5),function(){availabilityCheckInterval&&clearInterval(availabilityCheckInterval),submissionInterval&&clearInterval(submissionInterval),autoRefreshInterval&&clearInterval(autoRefreshInterval),autoSubmitCheckInterval&&clearInterval(autoSubmitCheckInterval),formMonitoringInterval&&clearInterval(formMonitoringInterval);});document[_0x2d86dc(0xe0)]===_0x2d86dc(0x1b0)?document[_0x2d86dc(0x1f5)](_0x2d86dc(0x20a),createUIOverlay):createUIOverlay();chrome['runtime']['onMessage'][_0x2d86dc(0x21e)]((_0x59b40d,_0x31ef41,_0x3f2e67)=>{const _0x461845=_0x2d86dc;return _0x59b40d[_0x461845(0x15a)]===_0x461845(0x102)&&(resetOverlayPosition(),_0x3f2e67({'success':!![]})),!![];});
+(() => {
+  "use strict";
+
+  if (window.__importDepHelperInitialized) {
+    return;
+  }
+  window.__importDepHelperInitialized = true;
+
+  const EXTENSION_ID = "import-dep-extension-ui";
+  const DOM_CHECK_INTERVAL = 4000;
+  const TURNSTILE_SELECTOR = "input[name=\"cf-turnstile-response\"]";
+  const FALLBACK_TURNSTILE_SELECTOR = "input[name=\"cf-chl-widget-f5s01_response\"]";
+  const REGISTRATION_URL = "https://import-dep.mega-sy.com/registration";
+  const IMPORT_DEP_ACTIVATION_SECRET = "IMPORTDEP2024";
+  const NOISE_INDEXES = [2, 5, 9, 14];
+
+  const STORAGE_KEYS = {
+    overlayState: "importDepExtensionState",
+    overlayPosition: "importDepExtensionPosition",
+    savedFormData: "importDepSavedData",
+    buttonStates: "importDepButtonStates",
+    redirect: "importDepExtensionRedirectEnabled",
+    monitoring: "importDepExtensionMonitoringEnabled",
+    sound: "importDepExtensionSoundEnabled",
+    activation: "importdep_activated",
+    activationLogs: "importDepExtensionLogs",
+    deviceId: "importdep_device_id"
+  };
+
+  const SELECTORS = {
+    overlay: `#${EXTENSION_ID}`,
+    sellerField: "#seller_name",
+    buyerField: "#buyer_name",
+    plateField: "#plate_number",
+    fieldset: "#formFields",
+    submitButton: "#submitBtn",
+    orderForm: "#orderForm",
+    token: "input[name=\"_token\"]",
+    startedAt: "input[name=\"started_at\"]",
+    hmac: "input[name=\"hmac\"]",
+    availabilityText: "#openText",
+    availabilityDot: "#openDot",
+    openModal: "#openModal",
+    captchaContainer: "#cf-content, [data-translate=\"challenge_page\"], .cf-browser-verification"
+  };
+
+  const CLASSES = {
+    toastContainer: "ext-toast-container",
+    toast: "ext-toast",
+    toastInfo: "ext-toast-info",
+    toastSuccess: "ext-toast-success",
+    toastError: "ext-toast-error",
+    toastWarning: "ext-toast-warning",
+    btnActive: "btn-active",
+    availabilityAvailable: "availability-dot available",
+    availabilityUnavailable: "availability-dot unavailable",
+    availabilityStopped: "availability-dot stopped",
+    minimized: "minimized"
+  };
+
+  const UI_TEMPLATE = `
+    <div class="extension-header">
+      <div class="header-title">
+        <span>🔄لوحة التحكم</span>
+        <div id="header-expiry-info" class="header-expiry-info" style="display: none;"></div>
+      </div>
+      <div class="header-controls">
+        <button id="ext-reset-btn" class="header-btn" title="إعادة تعيين الموضع">↻</button>
+        <button id="ext-minimize-btn" class="header-btn">−</button>
+        <button id="ext-close-btn" class="header-btn">×</button>
+      </div>
+    </div>
+    <div class="extension-content">
+      <div id="activation-panel" class="activation-panel hidden-when-minimized">
+        <div class="activation-message">
+          <h4>🔒 تفعيل الإضافة</h4>
+          <div id="activation-content">
+            <div class="input-group">
+              <label for="ext-activation-code">رمز التفعيل:</label>
+              <input type="text" id="ext-activation-code" placeholder="أدخل رمز التفعيل">
+            </div>
+            <div class="button-row">
+              <button id="ext-activate-btn" class="btn btn-success">تفعيل</button>
+            </div>
+            <div class="device-id-display">
+              <span id="device-id-text">جاري تحميل معرف الجهاز...</span>
+            </div>
+            <div class="generator-panel">
+              <div class="input-group inline">
+                <label for="ext-generator-days">عدد الأيام:</label>
+                <input type="number" id="ext-generator-days" min="1" max="365" value="30">
+              </div>
+              <button id="ext-generate-code" class="btn btn-secondary" title="إنشاء رمز تفعيل جديد">توليد رمز</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="main-controls-panel" class="main-controls-panel" style="display: none;">
+        <div class="input-panel hidden-when-minimized">
+          <div class="panel-header">
+            <h4>📝 تفاصيل الطلب</h4>
+            <div class="header-buttons">
+              <button id="ext-save-data" class="btn-small btn-success" title="حفظ البيانات">💾</button>
+              <button id="ext-clear-data" class="btn-small btn-secondary" title="مسح البيانات">🗑️</button>
+            </div>
+          </div>
+          <div class="input-group">
+            <input type="text" id="ext-seller-name" maxlength="40" placeholder="أدخل اسم البائع">
+            <label for="ext-seller-name">اسم البائع</label>
+          </div>
+          <div class="input-group">
+            <input type="text" id="ext-buyer-name" maxlength="40" placeholder="أدخل اسم المشتري">
+            <label for="ext-buyer-name">اسم المشتري</label>
+          </div>
+          <div class="input-group">
+            <input type="text" id="ext-plate-number" maxlength="20" placeholder="أدخل رقم اللوحة">
+            <label for="ext-plate-number">رقم اللوحة</label>
+          </div>
+        </div>
+        <div class="control-panel">
+          <div class="panel-header">
+            <h4>⚙️ أوامر الإرسال</h4>
+            <div class="header-buttons">
+              <input type="checkbox" id="ext-redirect-toggle" class="redirect-checkbox" checked>
+              <label for="ext-redirect-toggle" class="redirect-label" title="تفعيل/تعطيل إعادة التوجيه بعد الإرسال">
+                <span class="redirect-icon-enabled">🔄</span>
+                <span class="redirect-icon-disabled">⏹️</span>
+              </label>
+              <input type="checkbox" id="ext-sound-toggle" class="sound-checkbox">
+              <label for="ext-sound-toggle" class="sound-label" title="تفعيل/تعطيل الصوت">
+                <span class="sound-icon-on">🔊</span>
+                <span class="sound-icon-off">🔇</span>
+              </label>
+              <input type="checkbox" id="ext-monitoring-toggle" class="monitoring-checkbox">
+              <label for="ext-monitoring-toggle" class="monitoring-label" title="تفعيل/تعطيل المراقبة">
+                <span class="monitoring-icon">👁️</span>
+              </label>
+            </div>
+            <div class="availability-indicator">
+              <span class="availability-dot" id="availability-dot"></span>
+              <span class="availability-text" id="availability-text">جاري الفحص...</span>
+            </div>
+          </div>
+          <div class="button-grid">
+            <div class="button-row">
+              <button id="ext-submit-once" class="btn btn-purple">📤 إرسال مرة واحدة</button>
+              <button id="ext-trigger-submit" class="btn btn-primary">🚀 تسجيل الطلب</button>
+              <button id="ext-auto-submit" class="btn btn-orange toggle-btn">🤖 إرسال تلقائي</button>
+            </div>
+            <div class="button-row">
+              <button id="ext-submit-loop" class="btn btn-warning toggle-btn compact-btn">🔁 إرسال متكرر (ثانية)</button>
+              <div class="interval-container">
+                <div class="input-group inline">
+                  <input type="number" id="ext-interval" min="1" max="9999" value="5">
+                </div>
+              </div>
+            </div>
+            <div class="button-row">
+              <button id="ext-auto-refresh" class="btn btn-teal toggle-btn compact-btn">🔄 تحديث تلقائي (ثانية)</button>
+              <div class="interval-container">
+                <div class="input-group inline">
+                  <input type="number" id="ext-refresh-interval" min="1" max="9999" value="5">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="response-panel hidden-when-minimized">
+          <div class="response-header">
+            <h4>📋 الردود</h4>
+            <button id="ext-clear-logs" class="btn-small btn-danger" title="مسح السجل">🗑️</button>
+          </div>
+          <div id="ext-response-log"></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  function isRegistrationPage() {
+    if (!location.href.startsWith(REGISTRATION_URL)) {
+      return false;
+    }
+    const orderForm = document.querySelector(SELECTORS.orderForm);
+    const seller = document.querySelector(SELECTORS.sellerField);
+    return Boolean(orderForm && seller);
+  }
+
+  const html = String.raw;
+
+  function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+  }
+
+  class PersistentStore {
+    constructor(storage) {
+      this.storage = storage;
+    }
+
+    get(key, fallback = null) {
+      try {
+        const raw = this.storage.getItem(key);
+        if (!raw) {
+          return fallback;
+        }
+        return JSON.parse(raw);
+      } catch (error) {
+        console.error("Failed to read storage", key, error);
+        return fallback;
+      }
+    }
+
+    set(key, value) {
+      try {
+        this.storage.setItem(key, JSON.stringify(value));
+      } catch (error) {
+        console.error("Failed to store value", key, error);
+      }
+    }
+
+    remove(key) {
+      try {
+        this.storage.removeItem(key);
+      } catch (error) {
+        console.error("Failed to remove key", key, error);
+      }
+    }
+  }
+
+  class ToastManager {
+    constructor(root = document.body) {
+      this.root = root;
+      this.container = document.createElement("div");
+      this.container.className = CLASSES.toastContainer;
+      root.appendChild(this.container);
+    }
+
+    show(message, type = "info", timeout = 4000) {
+      const toast = document.createElement("div");
+      toast.className = [CLASSES.toast, this.#typeToClass(type)].join(" ");
+      toast.textContent = message;
+      this.container.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.add("hide");
+        setTimeout(() => toast.remove(), 300);
+      }, timeout);
+    }
+
+    #typeToClass(type) {
+      switch (type) {
+        case "success":
+          return CLASSES.toastSuccess;
+        case "error":
+          return CLASSES.toastError;
+        case "warning":
+          return CLASSES.toastWarning;
+        default:
+          return CLASSES.toastInfo;
+      }
+    }
+  }
+
+  class Logger {
+    constructor(root) {
+      this.root = root;
+    }
+
+    log(message, status = "info") {
+      if (!this.root) {
+        return;
+      }
+      const wrapper = document.createElement("div");
+      wrapper.className = `log-entry log-${status}`;
+      const time = new Date().toLocaleTimeString();
+      wrapper.innerHTML = `<span class="log-time">${time}</span><span class="log-text">${message}</span>`;
+      this.root.prepend(wrapper);
+      const maxEntries = 50;
+      while (this.root.children.length > maxEntries) {
+        this.root.lastElementChild?.remove();
+      }
+    }
+
+    clear() {
+      if (this.root) {
+        this.root.innerHTML = "";
+      }
+    }
+  }
+
+  class SoundPlayer {
+    constructor() {
+      this.context = null;
+    }
+
+    async playSuccessTone() {
+      try {
+        if (!window.AudioContext && !window.webkitAudioContext) {
+          throw new Error("AudioContext unavailable");
+        }
+        if (!this.context) {
+          const Ctx = window.AudioContext || window.webkitAudioContext;
+          this.context = new Ctx();
+        }
+        const ctx = this.context;
+        const oscillator = ctx.createOscillator();
+        const gain = ctx.createGain();
+        oscillator.type = "sine";
+        oscillator.frequency.value = 880;
+        oscillator.connect(gain);
+        gain.connect(ctx.destination);
+        const now = ctx.currentTime;
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.4, now + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.0);
+        oscillator.start(now);
+        oscillator.stop(now + 1.1);
+      } catch (error) {
+        console.warn("Cannot play sound", error);
+      }
+    }
+  }
+
+  class DeviceIdService {
+    constructor(store) {
+      this.store = store;
+      this.cachedId = null;
+    }
+
+    async getDeviceId() {
+      if (this.cachedId) {
+        return this.cachedId;
+      }
+      const stored = this.store.get(STORAGE_KEYS.deviceId, null);
+      if (stored) {
+        this.cachedId = stored;
+        return stored;
+      }
+      const generated = await this.#generateFingerprint();
+      this.store.set(STORAGE_KEYS.deviceId, generated);
+      this.cachedId = generated;
+      return generated;
+    }
+
+    async #generateFingerprint() {
+      try {
+        const ua = navigator.userAgent;
+        const lang = navigator.language;
+        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const screenInfo = `${screen.width}x${screen.height}-${screen.colorDepth}`;
+        const canvasFingerprint = await this.#getCanvasFingerprint();
+        const payload = `${ua}|${lang}|${timeZone}|${screenInfo}|${canvasFingerprint}`;
+        let hash = 0;
+        for (let i = 0; i < payload.length; i += 1) {
+          hash = (hash << 5) - hash + payload.charCodeAt(i);
+          hash |= 0;
+        }
+        return Math.abs(hash).toString(16).substring(0, 12);
+      } catch (error) {
+        console.warn("Unable to build fingerprint", error);
+        return `importdep-${Math.random().toString(24).substring(2, 12)}`;
+      }
+    }
+
+    async #getCanvasFingerprint() {
+      return new Promise((resolve) => {
+        try {
+          const canvas = document.createElement("canvas");
+          canvas.width = 200;
+          canvas.height = 50;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) {
+            resolve("noctx");
+            return;
+          }
+          ctx.textBaseline = "top";
+          ctx.font = "14px 'Arial'";
+          ctx.fillStyle = "#f60";
+          ctx.fillRect(0, 0, 200, 50);
+          ctx.fillStyle = "#069";
+          ctx.fillText("IMPORTDEP2024", 2, 2);
+          const data = canvas.toDataURL();
+          resolve(data);
+        } catch (error) {
+          resolve("nocanvas");
+        }
+      });
+    }
+  }
+
+  class ActivationService {
+    constructor(store, toast) {
+      this.store = store;
+      this.toast = toast;
+      this.deviceIdService = new DeviceIdService(store);
+      this.state = null;
+    }
+
+    async initialize() {
+      const activation = this.store.get(STORAGE_KEYS.activation, null);
+      if (!activation) {
+        this.state = null;
+        return false;
+      }
+      const deviceId = await this.deviceIdService.getDeviceId();
+      if (activation.deviceId !== deviceId) {
+        this.store.remove(STORAGE_KEYS.activation);
+        this.state = null;
+        return false;
+      }
+      if (activation.expiry && new Date(activation.expiry) < new Date()) {
+        this.store.remove(STORAGE_KEYS.activation);
+        this.state = null;
+        return false;
+      }
+      this.state = activation;
+      return true;
+    }
+
+    async getDeviceId() {
+      return this.deviceIdService.getDeviceId();
+    }
+
+    isActivated() {
+      return Boolean(this.state);
+    }
+
+    getExpiryDate() {
+      return this.state?.expiry ?? null;
+    }
+
+    async activateWithCode(code) {
+      const deviceId = await this.deviceIdService.getDeviceId();
+      const payload = this.#decodeActivationCode(code.trim());
+      if (!payload) {
+        this.toast.show("رمز التفعيل غير صالح", "error");
+        return false;
+      }
+      if (payload.deviceId !== deviceId) {
+        this.toast.show("معرف الجهاز غير مطابق", "error");
+        return false;
+      }
+      const expiryDate = new Date(payload.expiryDateTime);
+      if (Number.isNaN(expiryDate.getTime())) {
+        this.toast.show("صيغة التاريخ غير صحيحة", "error");
+        return false;
+      }
+      if (expiryDate < new Date()) {
+        this.toast.show("انتهت صلاحية الرمز", "error");
+        return false;
+      }
+      const state = {
+        deviceId,
+        expiry: expiryDate.toISOString()
+      };
+      this.store.set(STORAGE_KEYS.activation, state);
+      this.state = state;
+      this.toast.show("تم التفعيل بنجاح!", "success");
+      return true;
+    }
+
+    async generateActivationCode(days = 30) {
+      const deviceId = await this.deviceIdService.getDeviceId();
+      const expiry = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+      const formatted = this.#formatDateTime(expiry);
+      const reversed = `${deviceId}|${formatted}`.split("").reverse().join("");
+      const chars = [];
+      let payloadIndex = 0;
+      let noiseIndex = 0;
+      const noiseChars = IMPORT_DEP_ACTIVATION_SECRET.split("");
+      const totalLength = reversed.length + NOISE_INDEXES.length;
+      for (let i = 0; i < totalLength; i += 1) {
+        if (NOISE_INDEXES.includes(i)) {
+          chars.push(noiseChars[noiseIndex % noiseChars.length]);
+          noiseIndex += 1;
+        } else {
+          chars.push(reversed[payloadIndex]);
+          payloadIndex += 1;
+        }
+      }
+      return btoa(chars.join(""));
+    }
+
+    #decodeActivationCode(code) {
+      try {
+        const decoded = atob(code);
+        let cleaned = "";
+        for (let i = 0; i < decoded.length; i += 1) {
+          if (!NOISE_INDEXES.includes(i)) {
+            cleaned += decoded[i];
+          }
+        }
+        const normalized = cleaned.split("").reverse().join("");
+        const [deviceId, expiryDateTime] = normalized.split("|");
+        if (!deviceId || !expiryDateTime) {
+          return null;
+        }
+        return { deviceId, expiryDateTime };
+      } catch (error) {
+        console.error("Error decoding activation code", error);
+        return null;
+      }
+    }
+
+    #formatDateTime(date) {
+      const pad = (value) => value.toString().padStart(2, "0");
+      const year = date.getFullYear();
+      const month = pad(date.getMonth() + 1);
+      const day = pad(date.getDate());
+      const hours = pad(date.getHours());
+      const minutes = pad(date.getMinutes());
+      return `${year}-${month}-${day} ${hours}:${minutes}`;
+    }
+  }
+
+  class OverlayController {
+    constructor(store, toast, activationService) {
+      this.store = store;
+      this.toast = toast;
+      this.activationService = activationService;
+      this.overlay = null;
+      this.dragState = null;
+    }
+
+    mount() {
+      if (document.querySelector(SELECTORS.overlay)) {
+        this.overlay = document.querySelector(SELECTORS.overlay);
+        return this.overlay;
+      }
+      const wrapper = document.createElement("div");
+      wrapper.id = EXTENSION_ID;
+      wrapper.innerHTML = UI_TEMPLATE;
+      document.body.appendChild(wrapper);
+      this.overlay = wrapper;
+      this.#restorePosition();
+      this.#restoreMinimizedState();
+      this.#bindDragHandlers();
+      this.#bindMinimizeControls();
+      return wrapper;
+    }
+
+    #restorePosition() {
+      const position = this.store.get(STORAGE_KEYS.overlayPosition, {
+        top: 50,
+        right: 50
+      });
+      this.overlay.style.top = `${position.top}px`;
+      this.overlay.style.right = `${position.right}px`;
+    }
+
+    #restoreMinimizedState() {
+      const state = this.store.get(STORAGE_KEYS.overlayState, { minimized: false });
+      if (state.minimized) {
+        this.overlay.classList.add(CLASSES.minimized);
+      }
+      this.#updatePanelVisibility();
+    }
+
+    toggleMinimize() {
+      this.overlay.classList.toggle(CLASSES.minimized);
+      this.#updatePanelVisibility();
+      this.store.set(STORAGE_KEYS.overlayState, {
+        minimized: this.overlay.classList.contains(CLASSES.minimized)
+      });
+    }
+
+    showMainPanel() {
+      const mainPanel = this.overlay.querySelector("#main-controls-panel");
+      const activationPanel = this.overlay.querySelector("#activation-panel");
+      if (mainPanel && activationPanel) {
+        mainPanel.style.display = "block";
+        activationPanel.style.display = "none";
+      }
+    }
+
+    showActivationPanel() {
+      const mainPanel = this.overlay.querySelector("#main-controls-panel");
+      const activationPanel = this.overlay.querySelector("#activation-panel");
+      if (mainPanel && activationPanel) {
+        mainPanel.style.display = "none";
+        activationPanel.style.display = "block";
+      }
+    }
+
+    updateExpiryLabel(expiryIso) {
+      const headerExpiry = this.overlay.querySelector("#header-expiry-info");
+      if (!headerExpiry) {
+        return;
+      }
+      if (!expiryIso) {
+        headerExpiry.style.display = "none";
+        headerExpiry.textContent = "";
+        return;
+      }
+      const expiryDate = new Date(expiryIso);
+      const now = new Date();
+      const remainingMs = expiryDate - now;
+      const remainingDays = Math.max(0, Math.floor(remainingMs / (1000 * 60 * 60 * 24)));
+      headerExpiry.style.display = "block";
+      headerExpiry.textContent = `صلاحية الإضافة حتى: ${expiryDate.toLocaleString()} (متبقي: ${remainingDays} يوم)`;
+    }
+
+    resetPosition() {
+      this.overlay.style.top = "50px";
+      this.overlay.style.right = "50px";
+      this.store.set(STORAGE_KEYS.overlayPosition, { top: 50, right: 50 });
+      this.toast.show("تمت إعادة تعيين موضع اللوحة", "success");
+    }
+
+    close() {
+      this.overlay.remove();
+      window.__importDepHelperInitialized = false;
+    }
+
+    #bindDragHandlers() {
+      const header = this.overlay.querySelector(".extension-header");
+      if (!header) {
+        return;
+      }
+      header.addEventListener("mousedown", (event) => {
+        if (event.target.closest("button")) {
+          return;
+        }
+        this.dragState = {
+          startX: event.clientX,
+          startY: event.clientY,
+          initialTop: parseInt(this.overlay.style.top, 10) || 50,
+          initialRight: parseInt(this.overlay.style.right, 10) || 50
+        };
+        document.addEventListener("mousemove", this.#handleDragMove);
+        document.addEventListener("mouseup", this.#handleDragEnd, { once: true });
+      });
+    }
+
+    #handleDragMove = (event) => {
+      if (!this.dragState) {
+        return;
+      }
+      const deltaX = event.clientX - this.dragState.startX;
+      const deltaY = event.clientY - this.dragState.startY;
+      const newTop = clamp(this.dragState.initialTop + deltaY, 10, window.innerHeight - 120);
+      const newRight = clamp(this.dragState.initialRight - deltaX, 10, window.innerWidth - 260);
+      this.overlay.style.top = `${newTop}px`;
+      this.overlay.style.right = `${newRight}px`;
+    };
+
+    #handleDragEnd = () => {
+      document.removeEventListener("mousemove", this.#handleDragMove);
+      const top = parseInt(this.overlay.style.top, 10) || 50;
+      const right = parseInt(this.overlay.style.right, 10) || 50;
+      this.store.set(STORAGE_KEYS.overlayPosition, { top, right });
+      this.dragState = null;
+    };
+
+    #bindMinimizeControls() {
+      const minimizeButton = this.overlay.querySelector("#ext-minimize-btn");
+      const closeButton = this.overlay.querySelector("#ext-close-btn");
+      const resetButton = this.overlay.querySelector("#ext-reset-btn");
+      minimizeButton?.addEventListener("click", () => this.toggleMinimize());
+      closeButton?.addEventListener("click", () => this.close());
+      resetButton?.addEventListener("click", () => this.resetPosition());
+    }
+
+    #updatePanelVisibility() {
+      const minimized = this.overlay.classList.contains(CLASSES.minimized);
+      const toToggle = this.overlay.querySelectorAll(".hidden-when-minimized");
+      toToggle.forEach((element) => {
+        element.style.display = minimized ? "none" : "";
+      });
+    }
+  }
+
+  class ButtonStateManager {
+    constructor(store) {
+      this.store = store;
+    }
+
+    save(state) {
+      this.store.set(STORAGE_KEYS.buttonStates, state);
+    }
+
+    load(defaults) {
+      return this.store.get(STORAGE_KEYS.buttonStates, defaults);
+    }
+  }
+
+  class FormBridge {
+    constructor(toast, logger, store, activationService) {
+      this.toast = toast;
+      this.logger = logger;
+      this.store = store;
+      this.activationService = activationService;
+    }
+
+    get form() {
+      return document.querySelector(SELECTORS.orderForm);
+    }
+
+    get sellerField() {
+      return document.querySelector(SELECTORS.sellerField);
+    }
+
+    get buyerField() {
+      return document.querySelector(SELECTORS.buyerField);
+    }
+
+    get plateField() {
+      return document.querySelector(SELECTORS.plateField);
+    }
+
+    get submitButton() {
+      return document.querySelector(SELECTORS.submitButton);
+    }
+
+    enableFields() {
+      [this.fieldset(), this.sellerField, this.buyerField, this.plateField, this.submitButton]
+        .filter(Boolean)
+        .forEach((element) => {
+          element.disabled = false;
+          element.removeAttribute("readonly");
+          element.style.opacity = "1";
+          element.style.pointerEvents = "auto";
+        });
+    }
+
+    fieldset() {
+      return document.querySelector(SELECTORS.fieldset);
+    }
+
+    fillFromStorage() {
+      const saved = this.store.get(STORAGE_KEYS.savedFormData, null);
+      if (!saved) {
+        return;
+      }
+      const { sellerName, buyerName, plateNumber } = saved;
+      if (sellerName) {
+        this.sellerField.value = sellerName;
+      }
+      if (buyerName) {
+        this.buyerField.value = buyerName;
+      }
+      if (plateNumber) {
+        this.plateField.value = plateNumber;
+      }
+      this.toast.show("تم تحميل البيانات المحفوظة", "success");
+    }
+
+    readFormDataFromInputs() {
+      return {
+        sellerName: this.sellerField?.value.trim() ?? "",
+        buyerName: this.buyerField?.value.trim() ?? "",
+        plateNumber: this.plateField?.value.trim() ?? ""
+      };
+    }
+
+    saveFormData(data) {
+      if (!data.sellerName || !data.buyerName || !data.plateNumber) {
+        this.toast.show("جميع الحقول مطلوبة للحفظ", "error");
+        return false;
+      }
+      this.store.set(STORAGE_KEYS.savedFormData, data);
+      this.toast.show("تم حفظ البيانات بنجاح", "success");
+      return true;
+    }
+
+    clearFormData() {
+      this.store.remove(STORAGE_KEYS.savedFormData);
+      if (this.sellerField) this.sellerField.value = "";
+      if (this.buyerField) this.buyerField.value = "";
+      if (this.plateField) this.plateField.value = "";
+      this.toast.show("تم مسح البيانات", "success");
+    }
+
+    fillWebsiteFields(data) {
+      if (this.sellerField && data.sellerName) {
+        this.sellerField.value = data.sellerName;
+      }
+      if (this.buyerField && data.buyerName) {
+        this.buyerField.value = data.buyerName;
+      }
+      if (this.plateField && data.plateNumber) {
+        this.plateField.value = data.plateNumber;
+      }
+      this.enableFields();
+      [this.sellerField, this.buyerField, this.plateField]
+        .filter(Boolean)
+        .forEach((input) => {
+          input.dispatchEvent(new Event("input", { bubbles: true }));
+          input.dispatchEvent(new Event("change", { bubbles: true }));
+        });
+    }
+
+    async submitOrder(data) {
+      if (!this.activationService.isActivated()) {
+        const activated = await this.activationService.initialize();
+        if (!activated) {
+          this.toast.show("الرجاء تفعيل الإضافة أولاً", "error");
+          return null;
+        }
+      }
+
+      const form = this.form;
+      const seller = this.sellerField;
+      const buyer = this.buyerField;
+      const plate = this.plateField;
+      if (!form || !seller || !buyer || !plate) {
+        this.toast.show("لا يمكن العثور على عناصر النموذج", "error");
+        return null;
+      }
+
+      const turnstileValue = document.querySelector(TURNSTILE_SELECTOR)?.value ||
+        document.querySelector(FALLBACK_TURNSTILE_SELECTOR)?.value ||
+        "";
+      if (!turnstileValue) {
+        this.toast.show("CAPTCHA مطلوب", "error");
+        return null;
+      }
+
+      const payload = new FormData();
+      const values = {
+        _token: document.querySelector(SELECTORS.token)?.value || "",
+        started_at: document.querySelector(SELECTORS.startedAt)?.value || "",
+        hmac: document.querySelector(SELECTORS.hmac)?.value || "",
+        seller_name: data.sellerName,
+        buyer_name: data.buyerName,
+        plate_number: data.plateNumber,
+        "cf-turnstile-response": turnstileValue
+      };
+
+      for (const [key, value] of Object.entries(values)) {
+        if (value) {
+          payload.append(key, value);
+        }
+      }
+
+      form.querySelectorAll("input, select, textarea").forEach((field) => {
+        const name = field.name;
+        if (name && !values[name] && !field.disabled) {
+          payload.append(name, field.value);
+        }
+      });
+
+      this.logger.log(`جاري إرسال الطلب: البائع: ${data.sellerName}, المشتري: ${data.buyerName}, اللوحة: ${data.plateNumber}`, "info");
+
+      try {
+        const response = await fetch(REGISTRATION_URL, {
+          method: "POST",
+          body: payload,
+          credentials: "include",
+          headers: {
+            Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Cache-Control": "no-cache"
+          }
+        });
+        const text = await response.text();
+        this.logger.log("تم إرسال الطلب - جاري تحليل النتيجة", "success");
+        this.#handleSubmissionResponse(text);
+        return true;
+      } catch (error) {
+        this.logger.log(`خطأ في الاتصال: ${error.message}`, "error");
+        this.toast.show("حدث خطأ أثناء الاتصال", "error");
+        return false;
+      }
+    }
+
+    #handleSubmissionResponse(responseText) {
+      if (!responseText) {
+        this.logger.log("لم يتم تلقي رد من الخادم", "warning");
+        return;
+      }
+      if (responseText.includes("تم تسجيل طلبك بنجاح")) {
+        this.logger.log("تم تسجيل الطلب بنجاح!", "success");
+      } else if (responseText.includes("تم رفض الطلب")) {
+        this.logger.log("تم رفض الطلب، سيتم تحديث الصفحة", "error");
+      } else {
+        this.logger.log("تم إرسال الطلب - جاري التحقق من النتيجة...", "info");
+      }
+    }
+  }
+
+  class AvailabilityMonitor {
+    constructor(toast, soundPlayer) {
+      this.toast = toast;
+      this.soundPlayer = soundPlayer;
+      this.dot = null;
+      this.label = null;
+      this.monitoringEnabled = false;
+      this.intervalHandle = null;
+      this.lastAvailability = null;
+      this.callbacks = new Set();
+      this.soundEnabled = false;
+    }
+
+    initialize(dot, label) {
+      this.dot = dot;
+      this.label = label;
+    }
+
+    onChange(callback) {
+      this.callbacks.add(callback);
+    }
+
+    setSoundEnabled(enabled) {
+      this.soundEnabled = enabled;
+    }
+
+    setEnabled(enabled) {
+      this.monitoringEnabled = enabled;
+      if (!enabled) {
+        this.#updateUI(false, "مراقبة متوقفة", true);
+        this.stop();
+      } else {
+        this.start();
+      }
+    }
+
+    start() {
+      this.stop();
+      this.checkAvailability();
+      this.intervalHandle = setInterval(() => this.checkAvailability(), DOM_CHECK_INTERVAL);
+    }
+
+    stop() {
+      if (this.intervalHandle) {
+        clearInterval(this.intervalHandle);
+        this.intervalHandle = null;
+      }
+    }
+
+    checkAvailability() {
+      if (!this.monitoringEnabled) {
+        return;
+      }
+      const textNode = document.querySelector(SELECTORS.availabilityText);
+      const dotNode = document.querySelector(SELECTORS.availabilityDot);
+      let available = false;
+      let message = "جاري الفحص...";
+      if (textNode && textNode.textContent) {
+        if (textNode.textContent.includes("التسجيل متاح الآن")) {
+          available = true;
+          message = "النظام متاح ✅";
+        } else if (textNode.textContent.includes("التسجيل غير متاح")) {
+          available = false;
+          message = "النظام غير متاح ❌";
+        }
+      }
+      if (dotNode) {
+        if (dotNode.classList.contains("bg-green-400")) {
+          available = true;
+          message = "النظام متاح ✅";
+        } else if (dotNode.classList.contains("bg-red-400")) {
+          available = false;
+          message = "النظام غير متاح ❌";
+        }
+      }
+      this.#updateAvailability(available, message);
+    }
+
+    #updateAvailability(available, message) {
+      if (available === this.lastAvailability) {
+        this.#updateUI(available, message);
+        return;
+      }
+      this.lastAvailability = available;
+      this.#updateUI(available, message);
+      this.callbacks.forEach((callback) => {
+        try {
+          callback(available, message);
+        } catch (error) {
+          console.error("Availability callback failed", error);
+        }
+      });
+      if (available && this.soundEnabled) {
+        this.soundPlayer.playSuccessTone();
+      }
+    }
+
+    #updateUI(available, message, stopped = false) {
+      if (!this.dot || !this.label) {
+        return;
+      }
+      this.label.textContent = message;
+      if (stopped) {
+        this.dot.className = "availability-dot stopped";
+      } else {
+        this.dot.className = available ? CLASSES.availabilityAvailable : CLASSES.availabilityUnavailable;
+      }
+    }
+  }
+
+  class AutomationController {
+    constructor(formBridge, toast) {
+      this.formBridge = formBridge;
+      this.toast = toast;
+      this.submitLoopHandle = null;
+      this.autoRefreshHandle = null;
+      this.autoSubmitHandle = null;
+      this.redirectEnabled = true;
+      this.autoSubmitEnabled = false;
+      this.availabilityMonitor = null;
+      this.formDataProvider = () => this.formBridge.readFormDataFromInputs();
+    }
+
+    attachAvailabilityMonitor(monitor) {
+      this.availabilityMonitor = monitor;
+      monitor.onChange((available) => {
+        if (available && this.autoSubmitEnabled) {
+          const data = this.formDataProvider();
+          if (data.sellerName && data.buyerName && data.plateNumber) {
+            this.formBridge.fillWebsiteFields(data);
+            setTimeout(() => this.formBridge.submitOrder(data), 500);
+          } else {
+            this.toast.show("البيانات غير مكتملة للإرسال التلقائي", "error");
+          }
+        }
+      });
+    }
+
+    setRedirectEnabled(enabled) {
+      this.redirectEnabled = enabled;
+    }
+
+    startSubmitLoop(intervalSeconds) {
+      this.stopSubmitLoop();
+      const intervalMs = Math.max(1, intervalSeconds) * 1000;
+      this.submitLoopHandle = setInterval(() => {
+        const data = this.formDataProvider();
+        this.formBridge.fillWebsiteFields(data);
+        this.formBridge.submitOrder(data);
+      }, intervalMs);
+      this.toast.show(`بدأ الإرسال المتكرر بفاصل ${intervalSeconds} ثانية`, "success");
+    }
+
+    stopSubmitLoop() {
+      if (this.submitLoopHandle) {
+        clearInterval(this.submitLoopHandle);
+        this.submitLoopHandle = null;
+        this.toast.show("تم إيقاف الإرسال المتكرر", "info");
+      }
+    }
+
+    toggleAutoSubmit(enabled) {
+      this.autoSubmitEnabled = enabled;
+      if (enabled) {
+        this.toast.show("تم تفعيل الإرسال التلقائي", "success");
+        if (this.availabilityMonitor?.lastAvailability) {
+          const data = this.formDataProvider();
+          if (data.sellerName && data.buyerName && data.plateNumber) {
+            this.formBridge.fillWebsiteFields(data);
+            this.formBridge.submitOrder(data);
+          }
+        }
+      } else {
+        this.toast.show("تم تعطيل الإرسال التلقائي", "info");
+      }
+    }
+
+    startAutoRefresh(intervalSeconds) {
+      this.stopAutoRefresh();
+      const intervalMs = Math.max(1, intervalSeconds) * 1000;
+      this.autoRefreshHandle = setInterval(() => {
+        if (this.redirectEnabled) {
+          this.toast.show("جاري إعادة التوجيه...", "info");
+          window.location.href = REGISTRATION_URL;
+        } else {
+          this.toast.show("التحديث التلقائي موقوف لأن إعادة التوجيه معطلة", "warning");
+        }
+      }, intervalMs);
+      this.toast.show(`تم تفعيل التحديث التلقائي كل ${intervalSeconds} ثانية`, "success");
+    }
+
+    stopAutoRefresh() {
+      if (this.autoRefreshHandle) {
+        clearInterval(this.autoRefreshHandle);
+        this.autoRefreshHandle = null;
+        this.toast.show("تم إيقاف التحديث التلقائي", "info");
+      }
+    }
+  }
+
+  async function initialize() {
+    if (!isRegistrationPage()) {
+      return;
+    }
+
+    const store = new PersistentStore(localStorage);
+    const toast = new ToastManager();
+    const activationService = new ActivationService(store, toast);
+    await activationService.initialize();
+
+    const overlayController = new OverlayController(store, toast, activationService);
+    const overlay = overlayController.mount();
+
+    const logRoot = overlay.querySelector("#ext-response-log");
+    const logger = new Logger(logRoot);
+    const formBridge = new FormBridge(toast, logger, store, activationService);
+    formBridge.enableFields();
+
+    const availabilityDot = overlay.querySelector("#availability-dot");
+    const availabilityText = overlay.querySelector("#availability-text");
+    const soundPlayer = new SoundPlayer();
+    const availabilityMonitor = new AvailabilityMonitor(toast, soundPlayer);
+    availabilityMonitor.initialize(availabilityDot, availabilityText);
+
+    const automation = new AutomationController(formBridge, toast);
+    automation.attachAvailabilityMonitor(availabilityMonitor);
+
+    const buttonStateManager = new ButtonStateManager(store);
+    const savedStates = buttonStateManager.load({
+      redirectEnabled: store.get(STORAGE_KEYS.redirect, true),
+      soundEnabled: store.get(STORAGE_KEYS.sound, false),
+      monitoringEnabled: store.get(STORAGE_KEYS.monitoring, false)
+    });
+
+    const redirectToggle = overlay.querySelector("#ext-redirect-toggle");
+    const soundToggle = overlay.querySelector("#ext-sound-toggle");
+    const monitoringToggle = overlay.querySelector("#ext-monitoring-toggle");
+
+    redirectToggle.checked = savedStates.redirectEnabled;
+    soundToggle.checked = savedStates.soundEnabled;
+    monitoringToggle.checked = savedStates.monitoringEnabled;
+
+    automation.setRedirectEnabled(savedStates.redirectEnabled);
+    availabilityMonitor.setEnabled(savedStates.monitoringEnabled);
+    availabilityMonitor.setSoundEnabled(savedStates.soundEnabled);
+
+    const deviceIdText = overlay.querySelector("#device-id-text");
+    activationService.getDeviceId().then((id) => {
+      if (deviceIdText) {
+        deviceIdText.textContent = `معرف الجهاز: ${id}`;
+      }
+    });
+
+    function refreshActivationState() {
+      if (activationService.isActivated()) {
+        overlayController.showMainPanel();
+        overlayController.updateExpiryLabel(activationService.getExpiryDate());
+      } else {
+        overlayController.showActivationPanel();
+        overlayController.updateExpiryLabel(null);
+      }
+    }
+
+    refreshActivationState();
+
+    overlay.querySelector("#ext-generate-code")?.addEventListener("click", async () => {
+      const days = Number(overlay.querySelector("#ext-generator-days")?.value || "30");
+      const activationCode = await activationService.generateActivationCode(days);
+      navigator.clipboard.writeText(activationCode).then(() => {
+        toast.show("تم نسخ رمز التفعيل", "success");
+      }).catch(() => {
+        toast.show("رمز التفعيل: " + activationCode, "info");
+      });
+    });
+
+    overlay.querySelector("#ext-activate-btn")?.addEventListener("click", async () => {
+      const input = overlay.querySelector("#ext-activation-code");
+      const code = input?.value || "";
+      if (!code.trim()) {
+        toast.show("يرجى إدخال رمز التفعيل", "error");
+        return;
+      }
+      const success = await activationService.activateWithCode(code);
+      if (success) {
+        refreshActivationState();
+      }
+    });
+
+    overlay.querySelector("#ext-save-data")?.addEventListener("click", () => {
+      const data = formBridge.readFormDataFromInputs();
+      formBridge.saveFormData(data);
+    });
+
+    overlay.querySelector("#ext-clear-data")?.addEventListener("click", () => {
+      formBridge.clearFormData();
+    });
+
+    overlay.querySelector("#ext-clear-logs")?.addEventListener("click", () => {
+      logger.clear();
+    });
+
+    overlay.querySelector("#ext-submit-once")?.addEventListener("click", () => {
+      const data = formBridge.readFormDataFromInputs();
+      if (!data.sellerName || !data.buyerName || !data.plateNumber) {
+        toast.show("جميع الحقول مطلوبة", "error");
+        return;
+      }
+      formBridge.fillWebsiteFields(data);
+      formBridge.submitOrder(data);
+    });
+
+    overlay.querySelector("#ext-trigger-submit")?.addEventListener("click", () => {
+      const saved = store.get(STORAGE_KEYS.savedFormData, null);
+      if (!saved) {
+        toast.show("لا يوجد بيانات محفوظة", "error");
+        return;
+      }
+      formBridge.fillWebsiteFields(saved);
+      formBridge.submitOrder(saved);
+    });
+
+    const autoSubmitButton = overlay.querySelector("#ext-auto-submit");
+    autoSubmitButton?.addEventListener("click", () => {
+      const enabled = !autoSubmitButton.classList.contains(CLASSES.btnActive);
+      automation.toggleAutoSubmit(enabled);
+      autoSubmitButton.classList.toggle(CLASSES.btnActive, enabled);
+    });
+
+    overlay.querySelector("#ext-submit-loop")?.addEventListener("click", (event) => {
+      const button = event.currentTarget;
+      const intervalInput = overlay.querySelector("#ext-interval");
+      const interval = Number(intervalInput?.value || "5");
+      if (button.classList.contains(CLASSES.btnActive)) {
+        automation.stopSubmitLoop();
+        button.classList.remove(CLASSES.btnActive);
+      } else {
+        const data = formBridge.readFormDataFromInputs();
+        if (!data.sellerName || !data.buyerName || !data.plateNumber) {
+          toast.show("جميع الحقول مطلوبة", "error");
+          return;
+        }
+        automation.startSubmitLoop(interval);
+        button.classList.add(CLASSES.btnActive);
+      }
+    });
+
+    overlay.querySelector("#ext-auto-refresh")?.addEventListener("click", (event) => {
+      const button = event.currentTarget;
+      const intervalInput = overlay.querySelector("#ext-refresh-interval");
+      const interval = Number(intervalInput?.value || "5");
+      if (button.classList.contains(CLASSES.btnActive)) {
+        automation.stopAutoRefresh();
+        button.classList.remove(CLASSES.btnActive);
+      } else {
+        automation.startAutoRefresh(interval);
+        button.classList.add(CLASSES.btnActive);
+      }
+    });
+
+    redirectToggle.addEventListener("change", () => {
+      automation.setRedirectEnabled(redirectToggle.checked);
+      store.set(STORAGE_KEYS.redirect, redirectToggle.checked);
+      buttonStateManager.save({
+        redirectEnabled: redirectToggle.checked,
+        soundEnabled: soundToggle.checked,
+        monitoringEnabled: monitoringToggle.checked
+      });
+    });
+
+    soundToggle.addEventListener("change", () => {
+      store.set(STORAGE_KEYS.sound, soundToggle.checked);
+      availabilityMonitor.setSoundEnabled(soundToggle.checked);
+      buttonStateManager.save({
+        redirectEnabled: redirectToggle.checked,
+        soundEnabled: soundToggle.checked,
+        monitoringEnabled: monitoringToggle.checked
+      });
+    });
+
+    monitoringToggle.addEventListener("change", () => {
+      availabilityMonitor.setEnabled(monitoringToggle.checked);
+      store.set(STORAGE_KEYS.monitoring, monitoringToggle.checked);
+      buttonStateManager.save({
+        redirectEnabled: redirectToggle.checked,
+        soundEnabled: soundToggle.checked,
+        monitoringEnabled: monitoringToggle.checked
+      });
+    });
+
+    const savedData = store.get(STORAGE_KEYS.savedFormData, null);
+    if (savedData) {
+      overlay.querySelector("#ext-seller-name").value = savedData.sellerName || "";
+      overlay.querySelector("#ext-buyer-name").value = savedData.buyerName || "";
+      overlay.querySelector("#ext-plate-number").value = savedData.plateNumber || "";
+    }
+
+    formBridge.fillFromStorage();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initialize, { once: true });
+  } else {
+    initialize();
+  }
+})();
